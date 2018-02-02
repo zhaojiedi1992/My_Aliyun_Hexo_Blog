@@ -1943,7 +1943,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #ff5e8e;
+  background: #216ef0;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -3251,7 +3251,7 @@ h6 {
   margin-bottom: 0.5em;
   font-family: "ff-tisa-web-pro-1", "ff-tisa-web-pro-2", "Lucida Grande", "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
   font-weight: lighter;
-  color: #333;
+  color: #fff;
   -webkit-font-smoothing: antialiased;
   border-radius: 8px;
 }
