@@ -1943,7 +1943,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #e26503;
+  background: #fff29f;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -3261,7 +3261,7 @@ h1 {
   line-height: 1.2em;
   letter-spacing: 0.05em;
   text-align: center;
-  color: #fff;
+  color: #000;
 }
 h2 {
   font-size: 1.5em;
