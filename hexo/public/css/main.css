@@ -1993,7 +1993,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #3c9eb0;
+  background: #a496b8;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -3436,7 +3436,7 @@ h6 {
   margin-bottom: 0.5em;
   font-family: "ff-tisa-web-pro-1", "ff-tisa-web-pro-2", "Lucida Grande", "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
   font-weight: lighter;
-  color: #fff;
+  color: #000;
   -webkit-font-smoothing: antialiased;
   border-radius: 8px;
 }
@@ -3523,4 +3523,7 @@ p {
 }
 .posts-expand .post-meta {
   font-size: 6px;
+}
+.posts-collapse .post-title a {
+  color: #171616;
 }
