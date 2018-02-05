@@ -1943,7 +1943,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #463762;
+  background: #ff507e;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -3314,4 +3314,25 @@ p {
 #footer a:hover {
   color: #28d0e9 !important;
   text-decoration: none;
+}
+.post-tags a {
+  color: #0593d3;
+  border-bottom: none;
+  border-bottom: 1px solid #0593d3;
+}
+.post-tags a:hover {
+  color: #fc6423;
+  border-bottom: none;
+  border-bottom: 1px solid #fc6423;
+}
+.pace .pace-progress {
+  background: #1e92fb; /*进度条颜色*/
+  height: 3px;
+}
+.pace .pace-progress-inner {
+  box-shadow: 0 0 10px #1e92fb, 0 0 5px #1e92fb; /*阴影颜色*/
+}
+.pace .pace-activity {
+  border-top-color: #1e92fb; /*上边框颜色*/
+  border-left-color: #1e92fb; /*左边框颜色*/
 }
