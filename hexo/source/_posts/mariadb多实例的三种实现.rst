@@ -4,6 +4,7 @@ title: mariadb多实例的三种实现
 date: 2018-02-02 15:42:13
 tags: ["mysql", "mariadb", "linux"] 
 categories: database
+copyright: true
 ---
 
 mariadb多实例实现方式: 
