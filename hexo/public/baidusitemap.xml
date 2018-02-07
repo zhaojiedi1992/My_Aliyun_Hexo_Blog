@@ -3,9 +3,10 @@
 
 
     
+    
   <url>
     <loc>http://blog.linuxpanda.tech/2018/02/02/mariadb%E5%A4%9A%E5%AE%9E%E4%BE%8B%E7%9A%84%E4%B8%89%E7%A7%8D%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2018-02-06T15:55:54.364Z</lastmod>
+    <lastmod>2018-02-07T14:20:52.494Z</lastmod>
     <data>
         <display>
         <title>mariadb多实例的三种实现</title>
@@ -27,6 +28,25 @@
     </url>
 
     
+  <url>
+    <loc>http://blog.linuxpanda.tech/2018/02/07/aboutme/</loc>
+    <lastmod>2018-02-07T12:50:24.247Z</lastmod>
+    <data>
+        <display>
+        <title>关于我</title>
+        <pubTime>2018-02-07T12:48:41.000Z</pubTime>
+        
+        <tag>about</tag>
+         
+         
+           
+             
+              <breadCrumb title="about" url="http://blog.linuxpanda.tech/categories/about/"/>
+          
+        </display>
+    </data>
+    </url>
+
     
     
     
@@ -79,26 +99,6 @@
 
     
   <url>
-    <loc>http://blog.linuxpanda.tech/2018/02/02/test_python/</loc>
-    <lastmod>2018-02-06T12:10:00.706Z</lastmod>
-    <data>
-        <display>
-        <title>test_python</title>
-        <pubTime>2018-02-02T11:08:30.000Z</pubTime>
-        
-        <tag>python</tag>
-         
-         
-           
-             
-              <breadCrumb title="python" url="http://blog.linuxpanda.tech/categories/python/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://blog.linuxpanda.tech/2018/02/02/test_linux/</loc>
     <lastmod>2018-02-06T12:10:00.706Z</lastmod>
     <data>
@@ -112,6 +112,26 @@
            
              
               <breadCrumb title="linux" url="http://blog.linuxpanda.tech/categories/linux/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.linuxpanda.tech/2018/02/02/test_python/</loc>
+    <lastmod>2018-02-06T12:10:00.706Z</lastmod>
+    <data>
+        <display>
+        <title>test_python</title>
+        <pubTime>2018-02-02T11:08:30.000Z</pubTime>
+        
+        <tag>python</tag>
+         
+         
+           
+             
+              <breadCrumb title="python" url="http://blog.linuxpanda.tech/categories/python/"/>
           
         </display>
     </data>

@@ -5,6 +5,7 @@ date: 2018-02-02 15:42:13
 tags: ["mysql", "mariadb", "linux"] 
 categories: database
 copyright: true
+top: 90
 ---
 
 mariadb多实例实现方式: 

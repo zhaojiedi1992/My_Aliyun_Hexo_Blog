@@ -3,6 +3,29 @@
   
     
     <entry>
+      <title><![CDATA[关于我]]></title>
+      <url>/2018/02/07/aboutme/</url>
+      <content type="html"><![CDATA[<h2 id="我的工作经历">我的工作经历</h2>
+<h2 id="我的学习经历">我的学习经历</h2>
+<h2 id="我的爱好">我的爱好</h2>
+]]></content>
+      
+        <categories>
+            
+            <category> about </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> about </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[test_database]]></title>
       <url>/2018/02/02/test_database/</url>
       <content type="html"><![CDATA[<h2 id="test1">test1</h2>
