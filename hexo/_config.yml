@@ -78,3 +78,23 @@ theme: next
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type:
+
+
+#plugins:
+#  - hexo-algoliasearch
+
+algolia:
+  applicationID: 'AHGJT89GR9'
+  apiKey: 'fabf7792bd5bfea54e718df3268199d7'
+  adminApiKey: '767b1bb37331edd045eec50ac2fe24a8'
+  indexName: 'blog'
+  chunkSize: 5000
+  fields:
+    - excerpt
+    - excerpt:strip
+    - gallery
+    - permalink
+    - photos
+    - slug
+    - tags
+    - title 
