@@ -4,7 +4,7 @@
 
     
   <url>
-    <loc>http://hexo.linuxpanda.tech/2018/02/02/mariadb%E5%A4%9A%E5%AE%9E%E4%BE%8B%E7%9A%84%E4%B8%89%E7%A7%8D%E5%AE%9E%E7%8E%B0/</loc>
+    <loc>http://blog.linuxpanda.tech/2018/02/02/mariadb%E5%A4%9A%E5%AE%9E%E4%BE%8B%E7%9A%84%E4%B8%89%E7%A7%8D%E5%AE%9E%E7%8E%B0/</loc>
     <lastmod>2018-02-06T15:55:54.364Z</lastmod>
     <data>
         <display>
@@ -20,7 +20,7 @@
          
            
              
-              <breadCrumb title="database" url="http://hexo.linuxpanda.tech/categories/database/"/>
+              <breadCrumb title="database" url="http://blog.linuxpanda.tech/categories/database/"/>
           
         </display>
     </data>
@@ -39,7 +39,7 @@
     
     
   <url>
-    <loc>http://hexo.linuxpanda.tech/2018/02/02/test_spider/</loc>
+    <loc>http://blog.linuxpanda.tech/2018/02/02/test_spider/</loc>
     <lastmod>2018-02-06T12:10:00.707Z</lastmod>
     <data>
         <display>
@@ -51,7 +51,7 @@
          
            
              
-              <breadCrumb title="spider" url="http://hexo.linuxpanda.tech/categories/spider/"/>
+              <breadCrumb title="spider" url="http://blog.linuxpanda.tech/categories/spider/"/>
           
         </display>
     </data>
@@ -59,7 +59,7 @@
 
     
   <url>
-    <loc>http://hexo.linuxpanda.tech/2018/02/02/test_linux/</loc>
+    <loc>http://blog.linuxpanda.tech/2018/02/02/test_linux/</loc>
     <lastmod>2018-02-06T12:10:00.706Z</lastmod>
     <data>
         <display>
@@ -71,7 +71,7 @@
          
            
              
-              <breadCrumb title="linux" url="http://hexo.linuxpanda.tech/categories/linux/"/>
+              <breadCrumb title="linux" url="http://blog.linuxpanda.tech/categories/linux/"/>
           
         </display>
     </data>
@@ -79,27 +79,7 @@
 
     
   <url>
-    <loc>http://hexo.linuxpanda.tech/2018/02/02/test_python/</loc>
-    <lastmod>2018-02-06T12:10:00.706Z</lastmod>
-    <data>
-        <display>
-        <title>test_python</title>
-        <pubTime>2018-02-02T11:08:30.000Z</pubTime>
-        
-        <tag>python</tag>
-         
-         
-           
-             
-              <breadCrumb title="python" url="http://hexo.linuxpanda.tech/categories/python/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://hexo.linuxpanda.tech/2018/02/02/test_essay/</loc>
+    <loc>http://blog.linuxpanda.tech/2018/02/02/test_essay/</loc>
     <lastmod>2018-02-06T12:10:00.706Z</lastmod>
     <data>
         <display>
@@ -111,7 +91,7 @@
          
            
              
-              <breadCrumb title="essay" url="http://hexo.linuxpanda.tech/categories/essay/"/>
+              <breadCrumb title="essay" url="http://blog.linuxpanda.tech/categories/essay/"/>
           
         </display>
     </data>
@@ -119,22 +99,27 @@
 
     
   <url>
-    <loc>http://hexo.linuxpanda.tech/2018/02/02/test/</loc>
-    <lastmod>2018-02-06T12:10:00.705Z</lastmod>
+    <loc>http://blog.linuxpanda.tech/2018/02/02/test_python/</loc>
+    <lastmod>2018-02-06T12:10:00.706Z</lastmod>
     <data>
         <display>
-        <title>test</title>
-        <pubTime>2018-02-02T11:03:53.000Z</pubTime>
+        <title>test_python</title>
+        <pubTime>2018-02-02T11:08:30.000Z</pubTime>
         
+        <tag>python</tag>
+         
          
            
+             
+              <breadCrumb title="python" url="http://blog.linuxpanda.tech/categories/python/"/>
+          
         </display>
     </data>
     </url>
 
     
   <url>
-    <loc>http://hexo.linuxpanda.tech/2018/02/02/test_database/</loc>
+    <loc>http://blog.linuxpanda.tech/2018/02/02/test_database/</loc>
     <lastmod>2018-02-06T12:10:00.705Z</lastmod>
     <data>
         <display>
@@ -146,8 +131,23 @@
          
            
              
-              <breadCrumb title="database" url="http://hexo.linuxpanda.tech/categories/database/"/>
+              <breadCrumb title="database" url="http://blog.linuxpanda.tech/categories/database/"/>
           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.linuxpanda.tech/2018/02/02/test/</loc>
+    <lastmod>2018-02-06T12:10:00.705Z</lastmod>
+    <data>
+        <display>
+        <title>test</title>
+        <pubTime>2018-02-02T11:03:53.000Z</pubTime>
+        
+         
+           
         </display>
     </data>
     </url>

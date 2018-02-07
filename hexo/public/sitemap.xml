@@ -2,126 +2,126 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://hexo.linuxpanda.tech/2018/02/02/mariadb%E5%A4%9A%E5%AE%9E%E4%BE%8B%E7%9A%84%E4%B8%89%E7%A7%8D%E5%AE%9E%E7%8E%B0/</loc>
+    <loc>http://blog.linuxpanda.tech/2018/02/02/mariadb%E5%A4%9A%E5%AE%9E%E4%BE%8B%E7%9A%84%E4%B8%89%E7%A7%8D%E5%AE%9E%E7%8E%B0/</loc>
     
     <lastmod>2018-02-06T15:55:54.364Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://hexo.linuxpanda.tech/tags/index.html</loc>
+    <loc>http://blog.linuxpanda.tech/tags/index.html</loc>
     
     <lastmod>2018-02-06T12:10:00.719Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://hexo.linuxpanda.tech/spider/index.html</loc>
+    <loc>http://blog.linuxpanda.tech/python/index.html</loc>
     
     <lastmod>2018-02-06T12:10:00.718Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://hexo.linuxpanda.tech/python/index.html</loc>
+    <loc>http://blog.linuxpanda.tech/spider/index.html</loc>
     
     <lastmod>2018-02-06T12:10:00.718Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://hexo.linuxpanda.tech/linux/index.html</loc>
+    <loc>http://blog.linuxpanda.tech/linux/index.html</loc>
     
     <lastmod>2018-02-06T12:10:00.717Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://hexo.linuxpanda.tech/essay/index.html</loc>
+    <loc>http://blog.linuxpanda.tech/essay/index.html</loc>
     
     <lastmod>2018-02-06T12:10:00.712Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://hexo.linuxpanda.tech/essay/index-1.html</loc>
+    <loc>http://blog.linuxpanda.tech/donate/index.html</loc>
     
     <lastmod>2018-02-06T12:10:00.711Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://hexo.linuxpanda.tech/donate/index.html</loc>
+    <loc>http://blog.linuxpanda.tech/essay/index-1.html</loc>
     
     <lastmod>2018-02-06T12:10:00.711Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://hexo.linuxpanda.tech/donate/donate.html</loc>
+    <loc>http://blog.linuxpanda.tech/donate/donate.html</loc>
     
     <lastmod>2018-02-06T12:10:00.710Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://hexo.linuxpanda.tech/categories/index.html</loc>
+    <loc>http://blog.linuxpanda.tech/database/index.html</loc>
     
     <lastmod>2018-02-06T12:10:00.709Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://hexo.linuxpanda.tech/database/index.html</loc>
+    <loc>http://blog.linuxpanda.tech/categories/index.html</loc>
     
     <lastmod>2018-02-06T12:10:00.709Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://hexo.linuxpanda.tech/about/index.html</loc>
+    <loc>http://blog.linuxpanda.tech/about/index.html</loc>
     
     <lastmod>2018-02-06T12:10:00.708Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://hexo.linuxpanda.tech/2018/02/02/test_spider/</loc>
+    <loc>http://blog.linuxpanda.tech/2018/02/02/test_spider/</loc>
     
     <lastmod>2018-02-06T12:10:00.707Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://hexo.linuxpanda.tech/2018/02/02/test_linux/</loc>
+    <loc>http://blog.linuxpanda.tech/2018/02/02/test_linux/</loc>
     
     <lastmod>2018-02-06T12:10:00.706Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://hexo.linuxpanda.tech/2018/02/02/test_python/</loc>
+    <loc>http://blog.linuxpanda.tech/2018/02/02/test_essay/</loc>
     
     <lastmod>2018-02-06T12:10:00.706Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://hexo.linuxpanda.tech/2018/02/02/test_essay/</loc>
+    <loc>http://blog.linuxpanda.tech/2018/02/02/test_python/</loc>
     
     <lastmod>2018-02-06T12:10:00.706Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://hexo.linuxpanda.tech/2018/02/02/test/</loc>
+    <loc>http://blog.linuxpanda.tech/2018/02/02/test_database/</loc>
     
     <lastmod>2018-02-06T12:10:00.705Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://hexo.linuxpanda.tech/2018/02/02/test_database/</loc>
+    <loc>http://blog.linuxpanda.tech/2018/02/02/test/</loc>
     
     <lastmod>2018-02-06T12:10:00.705Z</lastmod>
     
