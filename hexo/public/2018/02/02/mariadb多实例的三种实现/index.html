@@ -1,541 +1,6 @@
-<!DOCTYPE html>
-
-
-
-  
-
-
-<html class="theme-next gemini use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="theme-color" content="#222">
-
-
-
-
-
-
-  
-  
-    
-    
-  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
-  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
-
-
-
-
-  
-  
-  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=6.0.3" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.3">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.3">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.3">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=6.0.3" color="#222">
-
-
-
-
-
-
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Gemini',
-    version: '6.0.3',
-    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: 'AHGJT89GR9',
-      apiKey: 'fabf7792bd5bfea54e718df3268199d7',
-      indexName: 'blog',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"输入查找内容","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
-
-
-
-
-  
-  <meta name="keywords" content="mysql,mariadb,linux," />
-
-
-<meta name="description" content="mariadb多实例实现方式:  mysqld_multi 这个是使用单独的配置文件来配置多个实例，不过管理实例还是很方便的。  多个sysv配置 这个方式相当于每个mairadb实例为一个不同的服务而已，每个实例一套sysv脚本。 配置起来比较简单，如果实例过多管理起来比较麻烦。  systemd 这个是systemd管理的特有的。   配置前规划 上面mairadb的">
-<meta name="keywords" content="mysql,mariadb,linux">
-<meta property="og:type" content="article">
-<meta property="og:title" content="mariadb多实例的三种实现">
-<meta property="og:url" content="http://blog.linuxpanda.tech/2018/02/02/mariadb多实例的三种实现/index.html">
-<meta property="og:site_name" content="LinuxPanda">
-<meta property="og:description" content="mariadb多实例实现方式:  mysqld_multi 这个是使用单独的配置文件来配置多个实例，不过管理实例还是很方便的。  多个sysv配置 这个方式相当于每个mairadb实例为一个不同的服务而已，每个实例一套sysv脚本。 配置起来比较简单，如果实例过多管理起来比较麻烦。  systemd 这个是systemd管理的特有的。   配置前规划 上面mairadb的">
-<meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-02-07T14:20:52.494Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="mariadb多实例的三种实现">
-<meta name="twitter:description" content="mariadb多实例实现方式:  mysqld_multi 这个是使用单独的配置文件来配置多个实例，不过管理实例还是很方便的。  多个sysv配置 这个方式相当于每个mairadb实例为一个不同的服务而已，每个实例一套sysv脚本。 配置起来比较简单，如果实例过多管理起来比较麻烦。  systemd 这个是systemd管理的特有的。   配置前规划 上面mairadb的">
-
-
-
-
-
-
-  <link rel="canonical" href="http://blog.linuxpanda.tech/2018/02/02/mariadb多实例的三种实现/"/>
-
-
-
-<script type="text/javascript" id="page.configurations">
-  CONFIG.page = {
-    sidebar: "",
-  };
-</script>
-  <title>mariadb多实例的三种实现 | LinuxPanda</title>
-  
-
-
-
-
-
-
-  <script type="text/javascript">
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?c268cd3f28f92d2977cf49d2b89d6ad9";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
-
-
-
-
-  <noscript>
-  <style type="text/css">
-    .use-motion .motion-element,
-    .use-motion .brand,
-    .use-motion .menu-item,
-    .sidebar-inner,
-    .use-motion .post-block,
-    .use-motion .pagination,
-    .use-motion .comments,
-    .use-motion .post-header,
-    .use-motion .post-body,
-    .use-motion .collection-title { opacity: initial; }
-
-    .use-motion .logo,
-    .use-motion .site-title,
-    .use-motion .site-subtitle {
-      opacity: initial;
-      top: initial;
-    }
-
-    .use-motion {
-      .logo-line-before i { left: initial; }
-      .logo-line-after i { right: initial; }
-    }
-  </style>
-</noscript>
-
-</head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"> <div class="site-brand-wrapper">
-  <div class="site-meta custom-logo">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">LinuxPanda</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-      
-        <h1 class="site-subtitle" itemprop="description">zhaojiedi1992</h1>
-      
-  </div>
-
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
-  </div>
-</div>
-
-<nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
-        
-        <li class="menu-item menu-item-主页">
-          <a href="/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />主页</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-标签">
-          <a href="/tags/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-数据库">
-          <a href="/categories/database/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-database"></i> <br />数据库</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-目录">
-          <a href="/categories/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />目录</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-归档">
-          <a href="/archives/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-python">
-          <a href="/categories/python/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-file-code-o"></i> <br />Python</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-linux">
-          <a href="/categories/linux/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />Linux</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-随笔">
-          <a href="/categories/essay/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-pencil-square-o"></i> <br />随笔</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-赞助">
-          <a href="/donate" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-credit-card"></i> <br />赞助</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-爬虫">
-          <a href="/categories/spider/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />爬虫</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-关于">
-          <a href="/about/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-user-o"></i> <br />关于</a>
-        </li>
-      
-
-      
-        <li class="menu-item menu-item-search">
-          
-            <a href="javascript:;" class="popup-trigger">
-          
-            
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />Search</a>
-        </li>
-      
-    </ul>
-  
-
-  
-    <div class="site-search">
-      
-  
-  <div class="algolia-popup popup search-popup">
-    <div class="algolia-search">
-      <div class="algolia-search-input-icon">
-        <i class="fa fa-search"></i>
-      </div>
-      <div class="algolia-search-input" id="algolia-search-input"></div>
-    </div>
-
-    <div class="algolia-results">
-      <div id="algolia-stats"></div>
-      <div id="algolia-hits"></div>
-      <div id="algolia-pagination" class="algolia-pagination"></div>
-    </div>
-
-    <span class="popup-btn-close">
-      <i class="fa fa-times-circle"></i>
-    </span>
-  </div>
-
-
-
-
-    </div>
-  
-</nav>
-
-
-  
-
-
-
- </div>
-    </header>
-
-    
-
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
-
-  <div id="posts" class="posts-expand">
-    
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.linuxpanda.tech/2018/02/02/mariadb多实例的三种实现/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zhaojiedi1992">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LinuxPanda">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">mariadb多实例的三种实现</h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-02T15:42:13+08:00">2018-02-02</time>
-            
-
-            
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/database/" itemprop="url" rel="index"><span itemprop="name">database</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2018/02/02/mariadb多实例的三种实现/" class="leancloud_visitors" data-flag-title="mariadb多实例的三种实现">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">Visitors&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-            <span class="post-meta-divider">|</span>
-            <span class="page-pv"><i class="fa fa-file-o"></i>
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
-            </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-
-      
-      
-
-      
-        <p>mariadb多实例实现方式:</p>
-<dl>
-<dt>mysqld_multi</dt>
-<dd><p>这个是使用单独的配置文件来配置多个实例，不过管理实例还是很方便的。</p>
-</dd>
-<dt>多个sysv配置</dt>
-<dd><p>这个方式相当于每个mairadb实例为一个不同的服务而已，每个实例一套sysv脚本。 配置起来比较简单，如果实例过多管理起来比较麻烦。</p>
-</dd>
-<dt>systemd</dt>
-<dd><p>这个是systemd管理的特有的。</p>
-</dd>
-</dl>
-<h2 id="配置前规划">配置前规划</h2>
-<p>上面mairadb的多实例有多种配置方法， 我们先规划如下：</p>
-<table>
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>方案</th>
-<th>主目录</th>
-<th>端口规划</th>
-<th>其他</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>方案1</td>
-<td>/data/scheme1/mysql/</td>
-<td>3307,3308</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>方案2</td>
-<td>/data/scheme2/mysql/</td>
-<td>4307,4308</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>方案3</td>
-<td>/data/scheme3/mysql/</td>
-<td>5307,5308</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="配置前的环境设置">配置前的环境设置</h2>
-<p>关闭selinux</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# setenforce 0</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# sed -i <span class="st">&#39;s@SELINUX=.*@SELINUX=disabled@&#39;</span> /etc/sysconfig/selinux</a></code></pre></div>
-<p>关闭防火墙</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# systemctl stop firewalld</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# systemctl disable firewalld</a></code></pre></div>
-<h2 id="安装mariadb">安装mariadb</h2>
-<p>这里我不使用centos默认的版本，使用最新稳定版本10.2。</p>
-<p>上面的基础规划完毕，需要配置下 <a href="https://downloads.mariadb.org/mariadb/repositories/#mirror=neusoft&amp;distro=CentOS&amp;distro_release=centos7-amd64--centos7&amp;version=10.2" target="_blank" rel="noopener">mariadb的yum源</a>。</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1">[<span class="ex">root@centos-158</span> yum.repos.d]# vim mariadb.repo                             # 添加/etc/yum.repos.d/mariadb.repo文件</a>
+<!DOCTYPE html><html class="theme-next gemini use-motion" lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="theme-color" content="#222"><script src="/lib/pace/pace.min.js?v=1.0.2"></script><link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css"><link href="/css/main.css?v=6.0.3" rel="stylesheet" type="text/css"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.3"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.3"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.3"><link rel="mask-icon" href="/images/logo.svg?v=6.0.3" color="#222"><script type="text/javascript" id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Gemini",version:"6.0.3",sidebar:{position:"left",display:"always",offset:12,b2t:!1,scrollpercent:!0,onmobile:!1},fancybox:!1,fastclick:!1,lazyload:!1,tabs:!0,motion:{enable:!0,async:!1,transition:{post_block:"fadeIn",post_header:"slideDownIn",post_body:"slideDownIn",coll_header:"slideLeftIn",sidebar:"slideUpIn"}},algolia:{applicationID:"AHGJT89GR9",apiKey:"fabf7792bd5bfea54e718df3268199d7",indexName:"blog",hits:{per_page:10},labels:{input_placeholder:"输入查找内容",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}}}</script><meta name="keywords" content="mysql,mariadb,linux,"><meta name="description" content="mariadb多实例实现方式:  mysqld_multi 这个是使用单独的配置文件来配置多个实例，不过管理实例还是很方便的。  多个sysv配置 这个方式相当于每个mairadb实例为一个不同的服务而已，每个实例一套sysv脚本。 配置起来比较简单，如果实例过多管理起来比较麻烦。  systemd 这个是systemd管理的特有的。   配置前规划 上面mairadb的"><meta name="keywords" content="mysql,mariadb,linux"><meta property="og:type" content="article"><meta property="og:title" content="mariadb多实例的三种实现"><meta property="og:url" content="http://blog.linuxpanda.tech/2018/02/02/mariadb多实例的三种实现/index.html"><meta property="og:site_name" content="LinuxPanda"><meta property="og:description" content="mariadb多实例实现方式:  mysqld_multi 这个是使用单独的配置文件来配置多个实例，不过管理实例还是很方便的。  多个sysv配置 这个方式相当于每个mairadb实例为一个不同的服务而已，每个实例一套sysv脚本。 配置起来比较简单，如果实例过多管理起来比较麻烦。  systemd 这个是systemd管理的特有的。   配置前规划 上面mairadb的"><meta property="og:locale" content="zh-CN"><meta property="og:updated_time" content="2018-02-07T14:20:52.494Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="mariadb多实例的三种实现"><meta name="twitter:description" content="mariadb多实例实现方式:  mysqld_multi 这个是使用单独的配置文件来配置多个实例，不过管理实例还是很方便的。  多个sysv配置 这个方式相当于每个mairadb实例为一个不同的服务而已，每个实例一套sysv脚本。 配置起来比较简单，如果实例过多管理起来比较麻烦。  systemd 这个是systemd管理的特有的。   配置前规划 上面mairadb的"><link rel="canonical" href="http://blog.linuxpanda.tech/2018/02/02/mariadb多实例的三种实现/"><script type="text/javascript" id="page.configurations">CONFIG.page={sidebar:""}</script><title>mariadb多实例的三种实现 | LinuxPanda</title><script type="text/javascript">var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="https://hm.baidu.com/hm.js?c268cd3f28f92d2977cf49d2b89d6ad9";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script><noscript><style type="text/css">.sidebar-inner,.use-motion .brand,.use-motion .collection-title,.use-motion .comments,.use-motion .menu-item,.use-motion .motion-element,.use-motion .pagination,.use-motion .post-block,.use-motion .post-body,.use-motion .post-header{opacity:initial}.use-motion .logo,.use-motion .site-subtitle,.use-motion .site-title{opacity:initial;top:initial}.logo-line-after i{right:initial}</style></noscript></head><body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN"><div class="container sidebar-position-left page-post-detail"><div class="headband"></div><header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-wrapper"><div class="site-meta custom-logo"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">LinuxPanda</span><span class="logo-line-after"><i></i></span></a></div><h1 class="site-subtitle" itemprop="description">zhaojiedi1992</h1></div><div class="site-nav-toggle"> <button><span class="btn-bar"></span><span class="btn-bar"></span><span class="btn-bar"></span></button></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br>标签<span class="badge">8</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br>分类<span class="badge">6</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br>归档<span class="badge">8</span></a></li><li class="menu-item menu-item-linux"><a href="/categories/linux/" rel="section"><i class="menu-item-icon fa fa-fw fa-linux"></i><br>Linux</a></li><li class="menu-item menu-item-python"><a href="/categories/python/" rel="section"><i class="menu-item-icon fa fa-fw fa-file-code-o"></i><br>Python</a></li><li class="menu-item menu-item-database"><a href="/categories/database/" rel="section"><i class="menu-item-icon fa fa-fw fa-database"></i><br>数据库</a></li><li class="menu-item menu-item-essay"><a href="/categories/essay/" rel="section"><i class="menu-item-icon fa fa-fw fa-pencil-square-o"></i><br>随笔</a></li><li class="menu-item menu-item-donate"><a href="/donate" rel="section"><i class="menu-item-icon fa fa-fw fa-credit-card"></i><br>赞助</a></li><li class="menu-item menu-item-spider"><a href="/categories/spider/" rel="section"><i class="menu-item-icon fa fa-fw fa-bug"></i><br>爬虫</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user-o"></i><br>关于</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><i class="menu-item-icon fa fa-search fa-fw"></i><br>搜索</a></li></ul><div class="site-search"><div class="algolia-popup popup search-popup"><div class="algolia-search"><div class="algolia-search-input-icon"><i class="fa fa-search"></i></div><div class="algolia-search-input" id="algolia-search-input"></div></div><div class="algolia-results"><div id="algolia-stats"></div><div id="algolia-hits"></div><div id="algolia-pagination" class="algolia-pagination"></div></div><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span></div></div></nav></div></header><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><div id="posts" class="posts-expand"><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="http://blog.linuxpanda.tech/2018/02/02/mariadb多实例的三种实现/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="zhaojiedi1992"><meta itemprop="description" content=""><meta itemprop="image" content="/images/avatar.jpg"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="LinuxPanda"></span><header class="post-header"><h2 class="post-title" itemprop="name headline">mariadb多实例的三种实现</h2><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-02T15:42:13+08:00">2018-02-02</time></span> <span class="post-category"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span> <span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/database/" itemprop="url" rel="index"><span itemprop="name">database</span></a></span></span> <span id="/2018/02/02/mariadb多实例的三种实现/" class="leancloud_visitors" data-flag-title="mariadb多实例的三种实现"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-eye"></i></span> <span class="post-meta-item-text">阅读次数&#58;</span><span class="leancloud-visitors-count"></span></span> <span class="post-meta-divider">|</span><span class="page-pv"><i class="fa fa-file-o"></i><span class="busuanzi-value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body" itemprop="articleBody"><p>mariadb多实例实现方式:</p><dl><dt>mysqld_multi</dt><dd><p>这个是使用单独的配置文件来配置多个实例，不过管理实例还是很方便的。</p></dd><dt>多个sysv配置</dt><dd><p>这个方式相当于每个mairadb实例为一个不同的服务而已，每个实例一套sysv脚本。 配置起来比较简单，如果实例过多管理起来比较麻烦。</p></dd><dt>systemd</dt><dd><p>这个是systemd管理的特有的。</p></dd></dl><h2 id="配置前规划">配置前规划</h2><p>上面mairadb的多实例有多种配置方法， 我们先规划如下：</p><table><colgroup><col style="width:25%"><col style="width:25%"><col style="width:25%"><col style="width:25%"></colgroup><thead><tr class="header"><th>方案</th><th>主目录</th><th>端口规划</th><th>其他</th></tr></thead><tbody><tr class="odd"><td>方案1</td><td>/data/scheme1/mysql/</td><td>3307,3308</td><td></td></tr><tr class="even"><td>方案2</td><td>/data/scheme2/mysql/</td><td>4307,4308</td><td></td></tr><tr class="odd"><td>方案3</td><td>/data/scheme3/mysql/</td><td>5307,5308</td><td></td></tr></tbody></table><h2 id="配置前的环境设置">配置前的环境设置</h2><p>关闭selinux</p><div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# setenforce 0</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# sed -i <span class="st">&#39;s@SELINUX=.*@SELINUX=disabled@&#39;</span> /etc/sysconfig/selinux</a></code></pre></div><p>关闭防火墙</p><div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# systemctl stop firewalld</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# systemctl disable firewalld</a></code></pre></div><h2 id="安装mariadb">安装mariadb</h2><p>这里我不使用centos默认的版本，使用最新稳定版本10.2。</p><p>上面的基础规划完毕，需要配置下 <a href="https://downloads.mariadb.org/mariadb/repositories/#mirror=neusoft&amp;distro=CentOS&amp;distro_release=centos7-amd64--centos7&amp;version=10.2" target="_blank" rel="noopener">mariadb的yum源</a>。</p><div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1">[<span class="ex">root@centos-158</span> yum.repos.d]# vim mariadb.repo                             # 添加/etc/yum.repos.d/mariadb.repo文件</a>
 <a class="sourceLine" id="cb3-2" data-line-number="2">[<span class="ex">root@centos-158</span> yum.repos.d]# cat mariadb.repo                             # 检查这个文件</a>
 <a class="sourceLine" id="cb3-3" data-line-number="3">[<span class="ex">root@centos-158</span> yum.repos.d]# cat mariadb.repo </a>
 <a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co"># MariaDB 10.2 CentOS repository list - created 2018-01-27 14:09 UTC</span></a>
@@ -547,22 +12,9 @@
 <a class="sourceLine" id="cb3-10" data-line-number="10"><span class="va">gpgkey=</span>https://yum.mariadb.org/RPM-GPG-KEY-MariaDB</a>
 <a class="sourceLine" id="cb3-11" data-line-number="11"><span class="va">gpgcheck=</span>1</a>
 <a class="sourceLine" id="cb3-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb3-13" data-line-number="13">[<span class="ex">root@centos-158</span> yum.repos.d]# yum install MariaDB-server MariaDB-client -y <span class="co"># 安装server和client</span></a></code></pre></div>
-<div class="note">
-<div class="admonition-title">
-<p>Note</p>
-</div>
-<p>这个包名是区分大小写的，使用rpm查询包提供文件的时候注意大小写。</p>
-</div>
-<h2 id="方案1-mysqld_multi">方案1-mysqld_multi</h2>
-<h3 id="创建目录并修改权限">创建目录并修改权限</h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mkdir -pv /data/scheme1/mysql/<span class="dt">{3307,3308}</span>/data         # 创建目录</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# chown mysql.mysql /data/scheme1/mysql/330<span class="dt">{7,8}</span> -R      # 修改权限</a></code></pre></div>
-<h3 id="安装数据库">安装数据库</h3>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb5-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mysql_install_db  --datadir=/data/scheme1/mysql/3308/data --basedir=/usr --user=mysql  # 安装到数据目录</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# mysql_install_db  --datadir=/data/scheme1/mysql/3308/data --basedir=/usr --user=mysql  # 安装到数据目录</a></code></pre></div>
-<h3 id="配置文件">配置文件</h3>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb6-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mv /etc/my.conf /etc/my.conf.yumbak                # 重命名文件，别影响接下来的实验，其实不必要的</a>
+<a class="sourceLine" id="cb3-13" data-line-number="13">[<span class="ex">root@centos-158</span> yum.repos.d]# yum install MariaDB-server MariaDB-client -y <span class="co"># 安装server和client</span></a></code></pre></div><div class="note"><div class="admonition-title"><p>Note</p></div><p>这个包名是区分大小写的，使用rpm查询包提供文件的时候注意大小写。</p></div><h2 id="方案1-mysqld_multi">方案1-mysqld_multi</h2><h3 id="创建目录并修改权限">创建目录并修改权限</h3><div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mkdir -pv /data/scheme1/mysql/<span class="dt">{3307,3308}</span>/data         # 创建目录</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# chown mysql.mysql /data/scheme1/mysql/330<span class="dt">{7,8}</span> -R      # 修改权限</a></code></pre></div><h3 id="安装数据库">安装数据库</h3><div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb5-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mysql_install_db  --datadir=/data/scheme1/mysql/3308/data --basedir=/usr --user=mysql  # 安装到数据目录</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# mysql_install_db  --datadir=/data/scheme1/mysql/3308/data --basedir=/usr --user=mysql  # 安装到数据目录</a></code></pre></div><h3 id="配置文件">配置文件</h3><div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb6-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mv /etc/my.conf /etc/my.conf.yumbak                # 重命名文件，别影响接下来的实验，其实不必要的</a>
 <a class="sourceLine" id="cb6-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# vim /etc/my.conf                                   # 编辑</a>
 <a class="sourceLine" id="cb6-3" data-line-number="3">[<span class="ex">root@centos-158</span> ~]# cat /etc/my.conf                                   # 查看</a>
 <a class="sourceLine" id="cb6-4" data-line-number="4">[<span class="ex">mysqld_multi</span>]</a>
@@ -583,28 +35,12 @@
 <a class="sourceLine" id="cb6-19" data-line-number="19"><span class="ex">port</span>       = 3308</a>
 <a class="sourceLine" id="cb6-20" data-line-number="20"><span class="ex">pid-file</span>   = /data/scheme1/mysql/3308/mariadb.pid </a>
 <a class="sourceLine" id="cb6-21" data-line-number="21"><span class="ex">datadir</span>    = /data/scheme1/mysql/3308/data </a>
-<a class="sourceLine" id="cb6-22" data-line-number="22"><span class="ex">user</span>       = mysql</a></code></pre></div>
-<div class="note">
-<div class="admonition-title">
-<p>Note</p>
-</div>
-<p>更多的参数官方文档。</p>
-</div>
-<h3 id="启动实例">启动实例</h3>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb7-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mysqld_multi start 3307                        # 启动指定的实例，这个是在配置mysqld3307片段，实例名字就是3307</a>
+<a class="sourceLine" id="cb6-22" data-line-number="22"><span class="ex">user</span>       = mysql</a></code></pre></div><div class="note"><div class="admonition-title"><p>Note</p></div><p>更多的参数官方文档。</p></div><h3 id="启动实例">启动实例</h3><div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb7-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mysqld_multi start 3307                        # 启动指定的实例，这个是在配置mysqld3307片段，实例名字就是3307</a>
 <a class="sourceLine" id="cb7-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# mysqld_multi start 3308                        # 启动指定的实例，这个是在配置mysqld3307片段，实例名字就是3307</a>
 <a class="sourceLine" id="cb7-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb7-4" data-line-number="4">[<span class="ex">root@centos-158</span> ~]# netstat -tunlp <span class="kw">|</span><span class="fu">grep</span> 330*                      # 查看服务</a>
 <a class="sourceLine" id="cb7-5" data-line-number="5"><span class="ex">tcp6</span>       0      0 :::3307                 :::*                    LISTEN      2631/mysqld         </a>
-<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="ex">tcp6</span>       0      0 :::3308                 :::*                    LISTEN      2746/mysqld </a></code></pre></div>
-<div class="note">
-<div class="admonition-title">
-<p>Note</p>
-</div>
-<p>mysqld_multi start 3307-3308来批量启动，多个矢量还可以逗号分割。</p>
-</div>
-<h3 id="安全初始化脚本运行">安全初始化脚本运行</h3>
-<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb8-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mysql_secure_installation -S /data/scheme1/mysql/3307/mariadb.sock  # 使用socket连接3307实例</a>
+<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="ex">tcp6</span>       0      0 :::3308                 :::*                    LISTEN      2746/mysqld </a></code></pre></div><div class="note"><div class="admonition-title"><p>Note</p></div><p>mysqld_multi start 3307-3308来批量启动，多个矢量还可以逗号分割。</p></div><h3 id="安全初始化脚本运行">安全初始化脚本运行</h3><div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb8-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mysql_secure_installation -S /data/scheme1/mysql/3307/mariadb.sock  # 使用socket连接3307实例</a>
 <a class="sourceLine" id="cb8-2" data-line-number="2"><span class="co"># 下面内容只跳出重要的输入项列出</span></a>
 <a class="sourceLine" id="cb8-3" data-line-number="3"><span class="ex">Enter</span> current password for root (enter for none)<span class="bu">:</span>              # 默认密码空，直接回车即可</a>
 <a class="sourceLine" id="cb8-4" data-line-number="4"><span class="ex">Set</span> root password? [Y/n] y                                     # 输入y</a>
@@ -614,9 +50,7 @@
 <a class="sourceLine" id="cb8-8" data-line-number="8"><span class="ex">Disallow</span> root login remotely? [Y/n] y                          # 禁止root用户远程登陆，这个看你具体情况设置</a>
 <a class="sourceLine" id="cb8-9" data-line-number="9"><span class="ex">Remove</span> test database and access to it? [Y/n] y                 # 移除test数据库</a>
 <a class="sourceLine" id="cb8-10" data-line-number="10"><span class="ex">Reload</span> privilege tables now? [Y/n] y                           # 刷新权限表</a>
-<a class="sourceLine" id="cb8-11" data-line-number="11">[<span class="ex">root@centos-158</span> ~]# mysql_secure_installation -S /data/scheme1/mysql/3308/mariadb.sock  # 使用socket连接3308实例</a></code></pre></div>
-<h3 id="添加多实例管理用户">添加多实例管理用户</h3>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb9-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# vim create_user.sql                        # 添加用户脚本</a>
+<a class="sourceLine" id="cb8-11" data-line-number="11">[<span class="ex">root@centos-158</span> ~]# mysql_secure_installation -S /data/scheme1/mysql/3308/mariadb.sock  # 使用socket连接3308实例</a></code></pre></div><h3 id="添加多实例管理用户">添加多实例管理用户</h3><div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb9-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# vim create_user.sql                        # 添加用户脚本</a>
 <a class="sourceLine" id="cb9-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# cat create_user.sql                        # 检查</a>
 <a class="sourceLine" id="cb9-3" data-line-number="3"><span class="ex">CREATE</span> USER <span class="st">&#39;multi_admin&#39;</span>@<span class="st">&#39;localhost&#39;</span> IDENTIFIED BY <span class="st">&#39;multi_admin&#39;</span><span class="kw">;</span></a>
 <a class="sourceLine" id="cb9-4" data-line-number="4"><span class="ex">GRANT</span> SHUTDOWN ON *.* TO <span class="st">&#39;multi_admin&#39;</span>@<span class="st">&#39;localhost&#39;</span><span class="kw">;</span></a>
@@ -625,10 +59,7 @@
 <a class="sourceLine" id="cb9-7" data-line-number="7">[<span class="ex">root@centos-158</span> ~]# cat create_user.sql <span class="kw">|</span> <span class="ex">mysql</span> -u root -S /data/scheme1/mysql/3307/mariadb.sock -p <span class="co">#执行脚本</span></a>
 <a class="sourceLine" id="cb9-8" data-line-number="8"><span class="ex">Enter</span> password: </a>
 <a class="sourceLine" id="cb9-9" data-line-number="9">[<span class="ex">root@centos-158</span> ~]# cat create_user.sql <span class="kw">|</span> <span class="ex">mysql</span> -u root -S /data/scheme1/mysql/3308/mariadb.sock -p <span class="co"># 执行脚本</span></a>
-<a class="sourceLine" id="cb9-10" data-line-number="10"><span class="ex">Enter</span> password: </a></code></pre></div>
-<p>更多 <a href="https://dev.mysql.com/doc/refman/5.7/en/mysqld-multi.html" target="_blank" rel="noopener">mysqld-multi</a> 使用帮助。</p>
-<h3 id="查看和关闭实例">查看和关闭实例</h3>
-<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb10-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mysqld_multi report                        # 查看服务状态</a>
+<a class="sourceLine" id="cb9-10" data-line-number="10"><span class="ex">Enter</span> password: </a></code></pre></div><p>更多 <a href="https://dev.mysql.com/doc/refman/5.7/en/mysqld-multi.html" target="_blank" rel="noopener">mysqld-multi</a> 使用帮助。</p><h3 id="查看和关闭实例">查看和关闭实例</h3><div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb10-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mysqld_multi report                        # 查看服务状态</a>
 <a class="sourceLine" id="cb10-2" data-line-number="2"><span class="ex">Reporting</span> MariaDB servers</a>
 <a class="sourceLine" id="cb10-3" data-line-number="3"><span class="ex">MariaDB</span> server from group: mysqld3307 is running</a>
 <a class="sourceLine" id="cb10-4" data-line-number="4"><span class="ex">MariaDB</span> server from group: mysqld3308 is running</a>
@@ -636,14 +67,9 @@
 <a class="sourceLine" id="cb10-6" data-line-number="6">[<span class="ex">root@centos-158</span> ~]# mysqld_multi report                        # 查看服务状态</a>
 <a class="sourceLine" id="cb10-7" data-line-number="7"><span class="ex">Reporting</span> MariaDB servers</a>
 <a class="sourceLine" id="cb10-8" data-line-number="8"><span class="ex">MariaDB</span> server from group: mysqld3307 is not running</a>
-<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="ex">MariaDB</span> server from group: mysqld3308 is running</a></code></pre></div>
-<h3 id="开机启动">开机启动</h3>
-<p>直接加入到rc.local中</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb11-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# echo <span class="kw">`</span><span class="fu">which</span> mysqld_multi<span class="kw">`</span> start 3307-3308  <span class="op">&gt;&gt;</span> /etc/rc.local        # 开机执行</a>
+<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="ex">MariaDB</span> server from group: mysqld3308 is running</a></code></pre></div><h3 id="开机启动">开机启动</h3><p>直接加入到rc.local中</p><div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb11-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# echo <span class="kw">`</span><span class="fu">which</span> mysqld_multi<span class="kw">`</span> start 3307-3308  <span class="op">&gt;&gt;</span> /etc/rc.local        # 开机执行</a>
 <a class="sourceLine" id="cb11-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# tail -n 1 /etc/rc.local </a>
-<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="ex">/usr/bin/mysqld_multi</span> start 3307-3308</a></code></pre></div>
-<p>上面的加入rc.local方式管理上容易混乱，还是写个sysv脚本好些。</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb12-1" data-line-number="1">[<span class="ex">root@centos-158</span> init.d]# cd /etc/rc.d/init.d/</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="ex">/usr/bin/mysqld_multi</span> start 3307-3308</a></code></pre></div><p>上面的加入rc.local方式管理上容易混乱，还是写个sysv脚本好些。</p><div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb12-1" data-line-number="1">[<span class="ex">root@centos-158</span> init.d]# cd /etc/rc.d/init.d/</a>
 <a class="sourceLine" id="cb12-2" data-line-number="2">[<span class="ex">root@centos-158</span> init.d]# vim mysqld_multi </a>
 <a class="sourceLine" id="cb12-3" data-line-number="3">[<span class="ex">root@centos-158</span> init.d]# cat mysqld_multi </a>
 <a class="sourceLine" id="cb12-4" data-line-number="4"><span class="co">#! /bin/bash</span></a>
@@ -684,18 +110,10 @@
 <a class="sourceLine" id="cb12-39" data-line-number="39"><span class="kw">esac</span></a>
 <a class="sourceLine" id="cb12-40" data-line-number="40"></a>
 <a class="sourceLine" id="cb12-41" data-line-number="41">[<span class="ex">root@centos-158</span> init.d]# chkconfig --add mysqld_multi                  # 添加sysv</a>
-<a class="sourceLine" id="cb12-42" data-line-number="42">[<span class="ex">root@centos-158</span> init.d]# chkconfig mysqld_multi on                     # 启用mysqld_multi</a></code></pre></div>
-<h2 id="方案2-多sysv脚本">方案2-多sysv脚本</h2>
-<h3 id="创建目录并修改权限-1">创建目录并修改权限</h3>
-<p>这种方式，需要每个配置文件都要单独存放，可以给目录更详细的规划下</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb13-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]#  mkdir -pv /data/scheme2/mysql/<span class="dt">{4307,4308}/{data,etc,log,socket,pid,service}</span>       # 创建目录</a>
+<a class="sourceLine" id="cb12-42" data-line-number="42">[<span class="ex">root@centos-158</span> init.d]# chkconfig mysqld_multi on                     # 启用mysqld_multi</a></code></pre></div><h2 id="方案2-多sysv脚本">方案2-多sysv脚本</h2><h3 id="创建目录并修改权限-1">创建目录并修改权限</h3><p>这种方式，需要每个配置文件都要单独存放，可以给目录更详细的规划下</p><div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb13-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]#  mkdir -pv /data/scheme2/mysql/<span class="dt">{4307,4308}/{data,etc,log,socket,pid,service}</span>       # 创建目录</a>
 <a class="sourceLine" id="cb13-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# chown mysql.mysql /data/scheme2/mysql/4307 -R                                      # 修改所有者</a>
-<a class="sourceLine" id="cb13-3" data-line-number="3">[<span class="ex">root@centos-158</span> ~]# chown mysql.mysql /data/scheme2/mysql/4308 -R                                      # 修改所有者</a></code></pre></div>
-<h3 id="安装数据库-1">安装数据库</h3>
-<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb14-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mysql_install_db  --datadir=/data/scheme2/mysql/4307/data --basedir=/usr --user=mysql  # 安装数据库</a>
-<a class="sourceLine" id="cb14-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# mysql_install_db  --datadir=/data/scheme2/mysql/4308/data --basedir=/usr --user=mysql  # 安装数据库</a></code></pre></div>
-<h3 id="配置配置文件">配置配置文件</h3>
-<div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb15-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# cd /data/scheme2/mysql/4307/etc/                           # 进入配置目录</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3">[<span class="ex">root@centos-158</span> ~]# chown mysql.mysql /data/scheme2/mysql/4308 -R                                      # 修改所有者</a></code></pre></div><h3 id="安装数据库-1">安装数据库</h3><div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb14-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mysql_install_db  --datadir=/data/scheme2/mysql/4307/data --basedir=/usr --user=mysql  # 安装数据库</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# mysql_install_db  --datadir=/data/scheme2/mysql/4308/data --basedir=/usr --user=mysql  # 安装数据库</a></code></pre></div><h3 id="配置配置文件">配置配置文件</h3><div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb15-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# cd /data/scheme2/mysql/4307/etc/                           # 进入配置目录</a>
 <a class="sourceLine" id="cb15-2" data-line-number="2">[<span class="ex">root@centos-158</span> etc]# vim my.cnf                                               # 编辑单独的配置文件              </a>
 <a class="sourceLine" id="cb15-3" data-line-number="3">[<span class="ex">root@centos-158</span> etc]# cat my.cnf                                               # 检查</a>
 <a class="sourceLine" id="cb15-4" data-line-number="4">[<span class="ex">mysqld</span>]</a>
@@ -715,9 +133,7 @@
 <a class="sourceLine" id="cb15-18" data-line-number="18"><span class="va">socket=</span>/data/scheme2/mysql/4308/socket/mariadb.sock</a>
 <a class="sourceLine" id="cb15-19" data-line-number="19">[<span class="ex">mysqld-safe</span>]</a>
 <a class="sourceLine" id="cb15-20" data-line-number="20"><span class="ex">log-error</span>=/data/scheme2/mysql/4308/log/mariadb.log</a>
-<a class="sourceLine" id="cb15-21" data-line-number="21"><span class="ex">pid-file</span>=/data/scheme2/mysql/4308/pid/mariadb.pid</a></code></pre></div>
-<h3 id="配置服务文件">配置服务文件</h3>
-<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb16-1" data-line-number="1">[<span class="ex">root@centos-158</span> 4307]# vim service/mysqld.sh                                   # 编辑sysv脚本</a>
+<a class="sourceLine" id="cb15-21" data-line-number="21"><span class="ex">pid-file</span>=/data/scheme2/mysql/4308/pid/mariadb.pid</a></code></pre></div><h3 id="配置服务文件">配置服务文件</h3><div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb16-1" data-line-number="1">[<span class="ex">root@centos-158</span> 4307]# vim service/mysqld.sh                                   # 编辑sysv脚本</a>
 <a class="sourceLine" id="cb16-2" data-line-number="2">[<span class="ex">root@centos-158</span> 4307]# cat service/mysqld.sh                                   # 检查</a>
 <a class="sourceLine" id="cb16-3" data-line-number="3"><span class="co">#!/bin/bash</span></a>
 <a class="sourceLine" id="cb16-4" data-line-number="4"><span class="co"># chkconfig: 2345 91 19</span></a>
@@ -863,9 +279,7 @@
 <a class="sourceLine" id="cb16-144" data-line-number="144"></a>
 <a class="sourceLine" id="cb16-145" data-line-number="145"><span class="co"># 添加执行权限</span></a>
 <a class="sourceLine" id="cb16-146" data-line-number="146">[<span class="ex">root@centos-158</span> 4307]# chmod a+x /data/scheme2/mysql/4307/service/mysqld.sh </a>
-<a class="sourceLine" id="cb16-147" data-line-number="147">[<span class="ex">root@centos-158</span> 4307]# chmod a+x /data/scheme2/mysql/4308/service/mysqld.sh</a></code></pre></div>
-<h3 id="开机启动-1">开机启动</h3>
-<div class="sourceCode" id="cb17"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb17-1" data-line-number="1">[<span class="ex">root@centos-158</span> 4307]# ln -s /data/scheme2/mysql/4307/service/mysqld.sh /etc/rc.d/init.d/mysql4307     # 添加到init.d目录</a>
+<a class="sourceLine" id="cb16-147" data-line-number="147">[<span class="ex">root@centos-158</span> 4307]# chmod a+x /data/scheme2/mysql/4308/service/mysqld.sh</a></code></pre></div><h3 id="开机启动-1">开机启动</h3><div class="sourceCode" id="cb17"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb17-1" data-line-number="1">[<span class="ex">root@centos-158</span> 4307]# ln -s /data/scheme2/mysql/4307/service/mysqld.sh /etc/rc.d/init.d/mysql4307     # 添加到init.d目录</a>
 <a class="sourceLine" id="cb17-2" data-line-number="2">[<span class="ex">root@centos-158</span> 4307]# chkconfig --add mysql4307                                                       # 添加到sysv</a>
 <a class="sourceLine" id="cb17-3" data-line-number="3">[<span class="ex">root@centos-158</span> 4307]# chkconfig mysql4307 on                                                          # 开机启动</a>
 <a class="sourceLine" id="cb17-4" data-line-number="4"></a>
@@ -873,35 +287,21 @@
 <a class="sourceLine" id="cb17-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb17-7" data-line-number="7">[<span class="ex">root@centos-158</span> 4308]# ln -s /data/scheme2/mysql/4308/service/mysqld.sh /etc/rc.d/init.d/mysql4308     # 添加到init.d目录</a>
 <a class="sourceLine" id="cb17-8" data-line-number="8">[<span class="ex">root@centos-158</span> 4308]# chkconfig --add mysql4308                                                       # 添加到sysv</a>
-<a class="sourceLine" id="cb17-9" data-line-number="9">[<span class="ex">root@centos-158</span> 4308]# chkconfig mysql4308 on                                                          # 开机启动</a></code></pre></div>
-<h3 id="启动服务和查看状态">启动服务和查看状态</h3>
-<div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb18-1" data-line-number="1">[<span class="ex">root@centos-158</span> 4307]# service mysql4307 start                     # 启动实例</a>
+<a class="sourceLine" id="cb17-9" data-line-number="9">[<span class="ex">root@centos-158</span> 4308]# chkconfig mysql4308 on                                                          # 开机启动</a></code></pre></div><h3 id="启动服务和查看状态">启动服务和查看状态</h3><div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb18-1" data-line-number="1">[<span class="ex">root@centos-158</span> 4307]# service mysql4307 start                     # 启动实例</a>
 <a class="sourceLine" id="cb18-2" data-line-number="2">[<span class="ex">root@centos-158</span> 4307]# service mysql4308 start                     # 启动实例      </a>
 <a class="sourceLine" id="cb18-3" data-line-number="3">[<span class="ex">root@centos-158</span> 4307]# netstat -tunlp <span class="kw">|</span><span class="fu">grep</span> 430                    # 查看状态</a>
 <a class="sourceLine" id="cb18-4" data-line-number="4"><span class="ex">tcp6</span>       0      0 :::4307                 :::*                    LISTEN      8221/mysqld         </a>
-<a class="sourceLine" id="cb18-5" data-line-number="5"><span class="ex">tcp6</span>       0      0 :::4308                 :::*                    LISTEN      8369/mysqld </a></code></pre></div>
-<h3 id="安全初始化">安全初始化</h3>
-<div class="sourceCode" id="cb19"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb19-1" data-line-number="1">[<span class="ex">root@centos-158</span> 4307]# mysql_secure_installation  -u root  -S /data/scheme2/mysql/4307/socket/mariadb.sock <span class="co"># 安全初始化，参考方案1</span></a>
-<a class="sourceLine" id="cb19-2" data-line-number="2">[<span class="ex">root@centos-158</span> 4307]# mysql_secure_installation  -u root  -S /data/scheme2/mysql/4308/socket/mariadb.sock <span class="co"># 安全初始化，参考方案1</span></a></code></pre></div>
-<h3 id="服务文件修改密码">服务文件修改密码</h3>
-<div class="sourceCode" id="cb20"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb20-1" data-line-number="1">[<span class="ex">root@centos-158</span> 4307]# vim service/mysqld.sh               # 修改文件的密码项为上面的安装初始化指定的密码</a>
+<a class="sourceLine" id="cb18-5" data-line-number="5"><span class="ex">tcp6</span>       0      0 :::4308                 :::*                    LISTEN      8369/mysqld </a></code></pre></div><h3 id="安全初始化">安全初始化</h3><div class="sourceCode" id="cb19"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb19-1" data-line-number="1">[<span class="ex">root@centos-158</span> 4307]# mysql_secure_installation  -u root  -S /data/scheme2/mysql/4307/socket/mariadb.sock <span class="co"># 安全初始化，参考方案1</span></a>
+<a class="sourceLine" id="cb19-2" data-line-number="2">[<span class="ex">root@centos-158</span> 4307]# mysql_secure_installation  -u root  -S /data/scheme2/mysql/4308/socket/mariadb.sock <span class="co"># 安全初始化，参考方案1</span></a></code></pre></div><h3 id="服务文件修改密码">服务文件修改密码</h3><div class="sourceCode" id="cb20"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb20-1" data-line-number="1">[<span class="ex">root@centos-158</span> 4307]# vim service/mysqld.sh               # 修改文件的密码项为上面的安装初始化指定的密码</a>
 <a class="sourceLine" id="cb20-2" data-line-number="2"><span class="va">mysql_pwd=</span><span class="st">&quot;xxxxx&quot;</span></a>
 <a class="sourceLine" id="cb20-3" data-line-number="3">[<span class="ex">root@centos-158</span> 4307]# chmod 750 service/mysqld.sh         # 带有密码设置下权限</a>
 <a class="sourceLine" id="cb20-4" data-line-number="4">[<span class="ex">root@centos-158</span> 4307]# cd ../4308                          </a>
 <a class="sourceLine" id="cb20-5" data-line-number="5">[<span class="ex">root@centos-158</span> 4308]# vim service/mysqld.sh               # 修改文件的密码项为上面的安装初始化指定的密码</a>
 <a class="sourceLine" id="cb20-6" data-line-number="6"><span class="va">mysql_pwd=</span><span class="st">&quot;xxxxx&quot;</span></a>
-<a class="sourceLine" id="cb20-7" data-line-number="7">[<span class="ex">root@centos-158</span> 4308]# chmod 750 service/mysqld.sh         # 带有密码设置下权限</a></code></pre></div>
-<h2 id="方案3-systemd">方案3-systemd</h2>
-<h3 id="创建目录并修改权限-2">创建目录并修改权限</h3>
-<p>这种方式，需要每个配置文件都要单独存放，可以给目录更详细的规划下</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb21-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mkdir -pv /data/scheme3/mysql/<span class="dt">{5307,5308}/{data,log,socket,pid}</span>        # 创建目录</a>
+<a class="sourceLine" id="cb20-7" data-line-number="7">[<span class="ex">root@centos-158</span> 4308]# chmod 750 service/mysqld.sh         # 带有密码设置下权限</a></code></pre></div><h2 id="方案3-systemd">方案3-systemd</h2><h3 id="创建目录并修改权限-2">创建目录并修改权限</h3><p>这种方式，需要每个配置文件都要单独存放，可以给目录更详细的规划下</p><div class="sourceCode" id="cb21"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb21-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mkdir -pv /data/scheme3/mysql/<span class="dt">{5307,5308}/{data,log,socket,pid}</span>        # 创建目录</a>
 <a class="sourceLine" id="cb21-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# chown mysql.mysql /data/scheme3/mysql/5307 -R                          # 所有者修改</a>
-<a class="sourceLine" id="cb21-3" data-line-number="3">[<span class="ex">root@centos-158</span> ~]# chown mysql.mysql /data/scheme3/mysql/5308 -R                          # 所有者修改</a></code></pre></div>
-<h3 id="安装数据库-2">安装数据库</h3>
-<div class="sourceCode" id="cb22"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb22-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mysql_install_db  --datadir=/data/scheme3/mysql/5307/data --basedir=/usr --user=mysql  # 安装数据库</a>
-<a class="sourceLine" id="cb22-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# mysql_install_db  --datadir=/data/scheme3/mysql/5308/data --basedir=/usr --user=mysql  # 安装数据库</a></code></pre></div>
-<h3 id="配置配置文件-1">配置配置文件</h3>
-<div class="sourceCode" id="cb23"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb23-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mv /etc/my.cnf /etc/my.cnf.multi                       # 原有配置文件重名</a>
+<a class="sourceLine" id="cb21-3" data-line-number="3">[<span class="ex">root@centos-158</span> ~]# chown mysql.mysql /data/scheme3/mysql/5308 -R                          # 所有者修改</a></code></pre></div><h3 id="安装数据库-2">安装数据库</h3><div class="sourceCode" id="cb22"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb22-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mysql_install_db  --datadir=/data/scheme3/mysql/5307/data --basedir=/usr --user=mysql  # 安装数据库</a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# mysql_install_db  --datadir=/data/scheme3/mysql/5308/data --basedir=/usr --user=mysql  # 安装数据库</a></code></pre></div><h3 id="配置配置文件-1">配置配置文件</h3><div class="sourceCode" id="cb23"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb23-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mv /etc/my.cnf /etc/my.cnf.multi                       # 原有配置文件重名</a>
 <a class="sourceLine" id="cb23-2" data-line-number="2">[<span class="ex">root@centos-158</span> system]# cd /etc/my.cnf.d/                                 # 进入conf.d目录</a>
 <a class="sourceLine" id="cb23-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb23-4" data-line-number="4">[<span class="ex">root@centos-158</span> my.cnf.d]# vim my5307.cnf                                  # 编辑这个文件，名字为my<span class="op">&lt;</span>instance_nam<span class="op">&gt;</span>.cnf</a>
@@ -919,9 +319,7 @@
 <a class="sourceLine" id="cb23-16" data-line-number="16"><span class="va">socket=</span>/data/scheme3/mysql/5308/socket/mariadb.sock</a>
 <a class="sourceLine" id="cb23-17" data-line-number="17"><span class="va">port=</span>5308</a>
 <a class="sourceLine" id="cb23-18" data-line-number="18"><span class="ex">log-error</span>=/data/scheme3/mysql/5308/log/mariadb.log</a>
-<a class="sourceLine" id="cb23-19" data-line-number="19"><span class="ex">pid-file</span>=/data/scheme3/mysql/5308/pid/mariadb.pid</a></code></pre></div>
-<h3 id="配置systemd">配置systemd</h3>
-<div class="sourceCode" id="cb24"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb24-1" data-line-number="1">[<span class="ex">root@centos-158</span> my.cnf.d]# vim /usr/lib/systemd/system/mariadb@.service        # 修改mariadb@service文件默认项</a>
+<a class="sourceLine" id="cb23-19" data-line-number="19"><span class="ex">pid-file</span>=/data/scheme3/mysql/5308/pid/mariadb.pid</a></code></pre></div><h3 id="配置systemd">配置systemd</h3><div class="sourceCode" id="cb24"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb24-1" data-line-number="1">[<span class="ex">root@centos-158</span> my.cnf.d]# vim /usr/lib/systemd/system/mariadb@.service        # 修改mariadb@service文件默认项</a>
 <a class="sourceLine" id="cb24-2" data-line-number="2"><span class="co"># 修改如下内容</span></a>
 <a class="sourceLine" id="cb24-3" data-line-number="3"><span class="va">ConditionPathExists=</span>/etc/my.cnf.d/my%I.cnf</a>
 <a class="sourceLine" id="cb24-4" data-line-number="4"></a>
@@ -930,716 +328,23 @@
 <a class="sourceLine" id="cb24-7" data-line-number="7"><span class="st">&amp;&amp; systemctl set-environment _WSREP_START_POSITION%I=</span><span class="va">$VAR</span><span class="st"> || exit 1&quot;</span></a>
 <a class="sourceLine" id="cb24-8" data-line-number="8"></a>
 <a class="sourceLine" id="cb24-9" data-line-number="9"><span class="va">ExecStart=</span>/usr/sbin/mysqld <span class="ex">--defaults-file</span>=/etc/my.cnf.d/my%I.cnf \</a>
-<a class="sourceLine" id="cb24-10" data-line-number="10"><span class="va">$_WSREP_NEW_CLUSTER</span> <span class="va">$_WSREP_START_POSITION</span>%I <span class="va">$MYSQLD_OPTS</span></a></code></pre></div>
-<p>上面的简单的说就是说明下mysqld命令的路径，指定你的实例所在的路径%I代表实例名字。后续启动的systemctl start <a href="mailto:mariadb@5307这个命令中" target="_blank" rel="noopener">mariadb@5307这个命令中</a>，5307就是实例名字。</p>
-<p>这个文件有点多， 提供一个下载参考吧。</p>
-<p><span data-role="download">/files/mariadb@.service</span></p>
-<h3 id="启动服务和查看状态-1">启动服务和查看状态</h3>
-<div class="sourceCode" id="cb25"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb25-1" data-line-number="1">[<span class="ex">root@centos-158</span> my.cnf.d]# systemctl daemon-reload                 # 重载systemd</a>
+<a class="sourceLine" id="cb24-10" data-line-number="10"><span class="va">$_WSREP_NEW_CLUSTER</span> <span class="va">$_WSREP_START_POSITION</span>%I <span class="va">$MYSQLD_OPTS</span></a></code></pre></div><p>上面的简单的说就是说明下mysqld命令的路径，指定你的实例所在的路径%I代表实例名字。后续启动的systemctl start <a href="mailto:mariadb@5307这个命令中" target="_blank" rel="noopener">mariadb@5307这个命令中</a>，5307就是实例名字。</p><p>这个文件有点多， 提供一个下载参考吧。</p><p><span data-role="download">/files/mariadb@.service</span></p><h3 id="启动服务和查看状态-1">启动服务和查看状态</h3><div class="sourceCode" id="cb25"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb25-1" data-line-number="1">[<span class="ex">root@centos-158</span> my.cnf.d]# systemctl daemon-reload                 # 重载systemd</a>
 <a class="sourceLine" id="cb25-2" data-line-number="2">[<span class="ex">root@centos-158</span> my.cnf.d]# systemctl start mariadb@5307            # 启动实例</a>
 <a class="sourceLine" id="cb25-3" data-line-number="3">[<span class="ex">root@centos-158</span> my.cnf.d]# systemctl start mariadb@5308            # 启动实例</a>
 <a class="sourceLine" id="cb25-4" data-line-number="4">[<span class="ex">root@centos-158</span> my.cnf.d]# netstat -tunlp <span class="kw">|</span><span class="fu">grep</span> 530                # 查看服务状态</a>
 <a class="sourceLine" id="cb25-5" data-line-number="5"><span class="ex">tcp6</span>       0      0 :::5307                 :::*                    LISTEN      10267/mysqld        </a>
-<a class="sourceLine" id="cb25-6" data-line-number="6"><span class="ex">tcp6</span>       0      0 :::5308                 :::*                    LISTEN      10595/mysqld  </a></code></pre></div>
-<h3 id="开机启动-2">开机启动</h3>
-<div class="sourceCode" id="cb26"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb26-1" data-line-number="1">[<span class="ex">root@centos-158</span> my.cnf.d]# systemctl enable  mariadb@5307           # 开机启动这个实例</a>
+<a class="sourceLine" id="cb25-6" data-line-number="6"><span class="ex">tcp6</span>       0      0 :::5308                 :::*                    LISTEN      10595/mysqld  </a></code></pre></div><h3 id="开机启动-2">开机启动</h3><div class="sourceCode" id="cb26"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb26-1" data-line-number="1">[<span class="ex">root@centos-158</span> my.cnf.d]# systemctl enable  mariadb@5307           # 开机启动这个实例</a>
 <a class="sourceLine" id="cb26-2" data-line-number="2"><span class="ex">Created</span> symlink from /etc/systemd/system/multi-user.target.wants/mariadb@5307.service to /usr/lib/systemd/system/mariadb@.service.</a>
 <a class="sourceLine" id="cb26-3" data-line-number="3">[<span class="ex">root@centos-158</span> my.cnf.d]# systemctl enable  mariadb@5308           # 开机启动这个实例</a>
-<a class="sourceLine" id="cb26-4" data-line-number="4"><span class="ex">Created</span> symlink from /etc/systemd/system/multi-user.target.wants/mariadb@5308.service to /usr/lib/systemd/system/mariadb@.service.</a></code></pre></div>
-<h3 id="安全初始化-1">安全初始化</h3>
-<div class="sourceCode" id="cb27"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb27-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mysql_secure_installation  -u root  -S /data/scheme3/mysql/5307/socket/mariadb.sock    # 安全设置</a>
-<a class="sourceLine" id="cb27-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# mysql_secure_installation  -u root  -S /data/scheme3/mysql/5308/socket/mariadb.sock    # 安全设置</a></code></pre></div>
-
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-      <div>
-        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
-  <div>❤ ❤ ❤ 您看的开心，不妨打赏下我，方便的话署名。 ❤ ❤ ❤</div>
-  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-    <span>Donate</span>
-  </button>
-  <div id="QR" style="display: none;">
-
-    
-      <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/images/weixin.png" alt="zhaojiedi1992 WeChat Pay"/>
-        <p>WeChat Pay</p>
-      </div>
-    
-
-    
-      <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/images/zhifubao.png" alt="zhaojiedi1992 Alipay"/>
-        <p>Alipay</p>
-      </div>
-    
-
-    
-
-  </div>
-</div>
-
-      </div>
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/mysql/" rel="tag"># mysql</a>
-          
-            <a href="/tags/mariadb/" rel="tag"># mariadb</a>
-          
-            <a href="/tags/linux/" rel="tag"># linux</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/02/02/test/" rel="prev" title="test">
-                test <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
-
-          </div>
-          
-
-  
-    <div class="comments" id="comments">
-      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMzg5MS8xMDQ0NA=="></div>
-    </div>
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
-          </li>
-        </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image"
-                src="/images/avatar.jpg"
-                alt="zhaojiedi1992" />
-            
-              <p class="site-author-name" itemprop="name">zhaojiedi1992</p>
-              <p class="site-description motion-element" itemprop="description"></p>
-          </div>
-
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives">
-                
-                    <span class="site-state-item-count">8</span>
-                    <span class="site-state-item-name">posts</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-categories">
-                  <a href="/categories/index.html">
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">6</span>
-                    <span class="site-state-item-name">categories</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  <a href="/tags/index.html">
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">8</span>
-                    <span class="site-state-item-name">tags</span>
-                  </a>
-                </div>
-              
-            </nav>
-          
-
-          
-
-          
-            <div class="links-of-author motion-element">
-              
-                <span class="links-of-author-item">
-                  <a href="https://github.com/zhaojiedi1992" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-github"></i>GitHub</a>
-                  
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="mailto:zhaojiedi1992@outlook.com" target="_blank" title="E-Mail" rel="external nofollow"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-                  
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="http://wpa.qq.com/msgrd?v=3&uin=1072892917&site=qq&menu=yes" target="_blank" title="QQ" rel="external nofollow"><i class="fa fa-fw fa-qq"></i>QQ</a>
-                  
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="http://www.cnblogs.com/zhaojiedi1992" target="_blank" title="Cnblogs" rel="external nofollow"><i class="fa fa-fw fa-wordpress"></i>Cnblogs</a>
-                  
-                </span>
-              
-            </div>
-          
-
-          
-          
-
-          
-          
-            <div class="links-of-blogroll motion-element links-of-blogroll-block">
-              <div class="links-of-blogroll-title">
-                <i class="fa  fa-fw fa-link"></i>
-                友情链接
-              </div>
-              <ul class="links-of-blogroll-list">
-                
-                  <li class="links-of-blogroll-item">
-                    <a href="http://www.cnblogs.com/zhaojiedi1992" title="老博客" target="_blank">老博客</a>
-                  </li>
-                
-                  <li class="links-of-blogroll-item">
-                    <a href="http://www.magedu.com/" title="马哥教育" target="_blank">马哥教育</a>
-                  </li>
-                
-              </ul>
-            </div>
-          
-
-          
-            
-          
-          
-
-        </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置前规划"><span class="nav-number">1.</span> <span class="nav-text">配置前规划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置前的环境设置"><span class="nav-number">2.</span> <span class="nav-text">配置前的环境设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装mariadb"><span class="nav-number">3.</span> <span class="nav-text">安装mariadb</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方案1-mysqld_multi"><span class="nav-number">4.</span> <span class="nav-text">方案1-mysqld_multi</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建目录并修改权限"><span class="nav-number">4.1.</span> <span class="nav-text">创建目录并修改权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装数据库"><span class="nav-number">4.2.</span> <span class="nav-text">安装数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置文件"><span class="nav-number">4.3.</span> <span class="nav-text">配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动实例"><span class="nav-number">4.4.</span> <span class="nav-text">启动实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安全初始化脚本运行"><span class="nav-number">4.5.</span> <span class="nav-text">安全初始化脚本运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加多实例管理用户"><span class="nav-number">4.6.</span> <span class="nav-text">添加多实例管理用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看和关闭实例"><span class="nav-number">4.7.</span> <span class="nav-text">查看和关闭实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开机启动"><span class="nav-number">4.8.</span> <span class="nav-text">开机启动</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方案2-多sysv脚本"><span class="nav-number">5.</span> <span class="nav-text">方案2-多sysv脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建目录并修改权限-1"><span class="nav-number">5.1.</span> <span class="nav-text">创建目录并修改权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装数据库-1"><span class="nav-number">5.2.</span> <span class="nav-text">安装数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置配置文件"><span class="nav-number">5.3.</span> <span class="nav-text">配置配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置服务文件"><span class="nav-number">5.4.</span> <span class="nav-text">配置服务文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开机启动-1"><span class="nav-number">5.5.</span> <span class="nav-text">开机启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动服务和查看状态"><span class="nav-number">5.6.</span> <span class="nav-text">启动服务和查看状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安全初始化"><span class="nav-number">5.7.</span> <span class="nav-text">安全初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务文件修改密码"><span class="nav-number">5.8.</span> <span class="nav-text">服务文件修改密码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方案3-systemd"><span class="nav-number">6.</span> <span class="nav-text">方案3-systemd</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建目录并修改权限-2"><span class="nav-number">6.1.</span> <span class="nav-text">创建目录并修改权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装数据库-2"><span class="nav-number">6.2.</span> <span class="nav-text">安装数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置配置文件-1"><span class="nav-number">6.3.</span> <span class="nav-text">配置配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置systemd"><span class="nav-number">6.4.</span> <span class="nav-text">配置systemd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动服务和查看状态-1"><span class="nav-number">6.5.</span> <span class="nav-text">启动服务和查看状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开机启动-2"><span class="nav-number">6.6.</span> <span class="nav-text">开机启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安全初始化-1"><span class="nav-number">6.7.</span> <span class="nav-text">安全初始化</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">豫ICP备18001328号</span>
-
-  
-
-  
-</div>
-
-
-  
-
-
-
-
-
-
-
-
-
-
-        
-<div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv">
-      本站访客数量 <i class="fa fa-user"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-      人次
-    </span>
-  
-
-  
-    <span class="site-pv">
-      本站总访问量 <i class="fa fa-eye"></i>
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-      次
-    </span>
-  
-</div>
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-          <span id="scrollpercent"><span>0</span>%</span>
-        
-      </div>
-    
-
-    
-
-  </div>
-
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
-  
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=6.0.3"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=6.0.3"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=6.0.3"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.3"></script>
-
-
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.3"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=6.0.3"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.3"></script>
-
-
-
-  
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-    <script type="text/javascript">
-      (function(d, s) {
-        var j, e = d.getElementsByTagName(s)[0];
-        if (typeof LivereTower === 'function') { return; }
-        j = d.createElement(s);
-        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-        j.async = true;
-        e.parentNode.insertBefore(j, e);
-      })(document, 'script');
-    </script>
-  
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-  
-  
-  
-  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
-
-  
-  
-  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
-  
-
-  <script src="/js/src/algolia-search.js?v=6.0.3"></script>
-
-
-
-  
-
-  
-  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
-  <script>AV.initialize("TMOrGzssdxpnAgGxNieILF7U-gzGzoHsz", "kLGRXget1JuElgh8wU2l9799");</script>
-  <script>
-    function showTime(Counter) {
-      var query = new AV.Query(Counter);
-      var entries = [];
-      var $visitors = $(".leancloud_visitors");
-
-      $visitors.each(function () {
-        entries.push( $(this).attr("id").trim() );
-      });
-
-      query.containedIn('url', entries);
-      query.find()
-        .done(function (results) {
-          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
-
-          if (results.length === 0) {
-            $visitors.find(COUNT_CONTAINER_REF).text(0);
-            return;
-          }
-
-          for (var i = 0; i < results.length; i++) {
-            var item = results[i];
-            var url = item.get('url');
-            var time = item.get('time');
-            var element = document.getElementById(url);
-
-            $(element).find(COUNT_CONTAINER_REF).text(time);
-          }
-          for(var i = 0; i < entries.length; i++) {
-            var url = entries[i];
-            var element = document.getElementById(url);
-            var countSpan = $(element).find(COUNT_CONTAINER_REF);
-            if( countSpan.text() == '') {
-              countSpan.text(0);
-            }
-          }
-        })
-        .fail(function (object, error) {
-          console.log("Error: " + error.code + " " + error.message);
-        });
-    }
-
-    function addCount(Counter) {
-      var $visitors = $(".leancloud_visitors");
-      var url = $visitors.attr('id').trim();
-      var title = $visitors.attr('data-flag-title').trim();
-      var query = new AV.Query(Counter);
-
-      query.equalTo("url", url);
-      query.find({
-        success: function(results) {
-          if (results.length > 0) {
-            var counter = results[0];
-            counter.fetchWhenSave(true);
-            counter.increment("time");
-            counter.save(null, {
-              success: function(counter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(counter.get('time'));
-              },
-              error: function(counter, error) {
-                console.log('Failed to save Visitor num, with error message: ' + error.message);
-              }
-            });
-          } else {
-            var newcounter = new Counter();
-            /* Set ACL */
-            var acl = new AV.ACL();
-            acl.setPublicReadAccess(true);
-            acl.setPublicWriteAccess(true);
-            newcounter.setACL(acl);
-            /* End Set ACL */
-            newcounter.set("title", title);
-            newcounter.set("url", url);
-            newcounter.set("time", 1);
-            newcounter.save(null, {
-              success: function(newcounter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
-              },
-              error: function(newcounter, error) {
-                console.log('Failed to create');
-              }
-            });
-          }
-        },
-        error: function(error) {
-          console.log('Error:' + error.code + " " + error.message);
-        }
-      });
-    }
-
-    $(function() {
-      var Counter = AV.Object.extend("Counter");
-      if ($('.leancloud_visitors').length == 1) {
-        addCount(Counter);
-      } else if ($('.post-title-link').length > 1) {
-        showTime(Counter);
-      }
-    });
-  </script>
-
-
-
-  
-
-  
-<script>
-(function(){
-    var bp = document.createElement('script');
-    var curProtocol = window.location.protocol.split(':')[0];
-    if (curProtocol === 'https') {
-        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
-    }
-    else {
-        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-    }
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(bp, s);
-})();
-</script>
-
-
-  
-
-  
-  
-
-  
-
-  
-
-  
-
-  
-
-
-  <!-- 页面点击小红心 -->
-  <script type="text/javascript" src="/js/src/love.js"></script>
-  
-<div id="hexo-helper-live2d">
-  <canvas id="live2dcanvas" width="150" height="300"></canvas>
-</div>
-<style>
-  #live2dcanvas{
-    position: fixed;
-    width: 150px;
-    height: 300px;
-    opacity:0.7;
-    right: 0px;
-    z-index: 999;
-    pointer-events: none;
-    bottom: -20px;
-  }
-</style>
-<script type="text/javascript" src="/live2d/device.min.js"></script>
-<script type="text/javascript">
+<a class="sourceLine" id="cb26-4" data-line-number="4"><span class="ex">Created</span> symlink from /etc/systemd/system/multi-user.target.wants/mariadb@5308.service to /usr/lib/systemd/system/mariadb@.service.</a></code></pre></div><h3 id="安全初始化-1">安全初始化</h3><div class="sourceCode" id="cb27"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb27-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# mysql_secure_installation  -u root  -S /data/scheme3/mysql/5307/socket/mariadb.sock    # 安全设置</a>
+<a class="sourceLine" id="cb27-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# mysql_secure_installation  -u root  -S /data/scheme3/mysql/5308/socket/mariadb.sock    # 安全设置</a></code></pre></div></div><div><div style="padding:10px 0;margin:20px auto;width:90%;text-align:center"><div>❤ ❤ ❤ 您看的开心，不妨打赏下我，方便的话署名。 ❤ ❤ ❤</div> <button id="rewardButton" disable="enable" onclick='var qr=document.getElementById("QR");"none"===qr.style.display?qr.style.display="block":qr.style.display="none"'> <span>打赏</span></button><div id="QR" style="display:none"><div id="wechat" style="display:inline-block"> <img id="wechat_qr" src="/images/weixin.png" alt="zhaojiedi1992 微信支付"><p>微信支付</p></div><div id="alipay" style="display:inline-block"> <img id="alipay_qr" src="/images/zhifubao.png" alt="zhaojiedi1992 支付宝"><p>支付宝</p></div></div></div></div><footer class="post-footer"><div class="post-tags"><a href="/tags/mysql/" rel="tag"><i class="fa fa-tag"></i> mysql</a><a href="/tags/mariadb/" rel="tag"><i class="fa fa-tag"></i> mariadb</a><a href="/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a></div><div class="post-nav"><div class="post-nav-next post-nav-item"></div><span class="post-nav-divider"></span><div class="post-nav-prev post-nav-item"> <a href="/2018/02/02/test/" rel="prev" title="test">test<i class="fa fa-chevron-right"></i></a></div></div></footer></div></article><div class="post-spread"></div></div></div><div class="comments" id="comments"><div id="lv-container" data-id="city" data-uid="MTAyMC8zMzg5MS8xMDQ0NA=="></div></div></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span><span class="sidebar-toggle-line sidebar-toggle-line-middle"></span><span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap"> 文章目录</li><li class="sidebar-nav-overview" data-target="site-overview-wrap"> 站点概览</li></ul><section class="site-overview-wrap sidebar-panel"><div class="site-overview"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"> <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="zhaojiedi1992"><p class="site-author-name" itemprop="name">zhaojiedi1992</p><p class="site-description motion-element" itemprop="description"></p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"> <a href="/archives/"><span class="site-state-item-count">8</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"> <a href="/categories/index.html"><span class="site-state-item-count">6</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags/index.html"><span class="site-state-item-count">8</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="links-of-author motion-element"><span class="links-of-author-item"><a href="https://github.com/zhaojiedi1992" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-github"></i> GitHub</a></span><span class="links-of-author-item"><a href="mailto:zhaojiedi1992@outlook.com" target="_blank" title="E-Mail" rel="external nofollow"><i class="fa fa-fw fa-envelope"></i> E-Mail</a></span><span class="links-of-author-item"><a href="http://wpa.qq.com/msgrd?v=3&uin=1072892917&site=qq&menu=yes" target="_blank" title="QQ" rel="external nofollow"><i class="fa fa-fw fa-qq"></i> QQ</a></span><span class="links-of-author-item"><a href="http://www.cnblogs.com/zhaojiedi1992" target="_blank" title="Cnblogs" rel="external nofollow"><i class="fa fa-fw fa-wordpress"></i> Cnblogs</a></span></div><div class="links-of-blogroll motion-element links-of-blogroll-block"><div class="links-of-blogroll-title"><i class="fa fa-fw fa-link"></i> 友情链接</div><ul class="links-of-blogroll-list"><li class="links-of-blogroll-item"> <a href="http://www.cnblogs.com/zhaojiedi1992" title="老博客" target="_blank">老博客</a></li><li class="links-of-blogroll-item"> <a href="http://www.magedu.com/" title="马哥教育" target="_blank">马哥教育</a></li></ul></div></div></section><section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active"><div class="post-toc"><div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置前规划"><span class="nav-number">1.</span> <span class="nav-text">配置前规划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置前的环境设置"><span class="nav-number">2.</span> <span class="nav-text">配置前的环境设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装mariadb"><span class="nav-number">3.</span> <span class="nav-text">安装mariadb</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方案1-mysqld_multi"><span class="nav-number">4.</span> <span class="nav-text">方案1-mysqld_multi</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建目录并修改权限"><span class="nav-number">4.1.</span> <span class="nav-text">创建目录并修改权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装数据库"><span class="nav-number">4.2.</span> <span class="nav-text">安装数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置文件"><span class="nav-number">4.3.</span> <span class="nav-text">配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动实例"><span class="nav-number">4.4.</span> <span class="nav-text">启动实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安全初始化脚本运行"><span class="nav-number">4.5.</span> <span class="nav-text">安全初始化脚本运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加多实例管理用户"><span class="nav-number">4.6.</span> <span class="nav-text">添加多实例管理用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看和关闭实例"><span class="nav-number">4.7.</span> <span class="nav-text">查看和关闭实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开机启动"><span class="nav-number">4.8.</span> <span class="nav-text">开机启动</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方案2-多sysv脚本"><span class="nav-number">5.</span> <span class="nav-text">方案2-多sysv脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建目录并修改权限-1"><span class="nav-number">5.1.</span> <span class="nav-text">创建目录并修改权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装数据库-1"><span class="nav-number">5.2.</span> <span class="nav-text">安装数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置配置文件"><span class="nav-number">5.3.</span> <span class="nav-text">配置配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置服务文件"><span class="nav-number">5.4.</span> <span class="nav-text">配置服务文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开机启动-1"><span class="nav-number">5.5.</span> <span class="nav-text">开机启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动服务和查看状态"><span class="nav-number">5.6.</span> <span class="nav-text">启动服务和查看状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安全初始化"><span class="nav-number">5.7.</span> <span class="nav-text">安全初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务文件修改密码"><span class="nav-number">5.8.</span> <span class="nav-text">服务文件修改密码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方案3-systemd"><span class="nav-number">6.</span> <span class="nav-text">方案3-systemd</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建目录并修改权限-2"><span class="nav-number">6.1.</span> <span class="nav-text">创建目录并修改权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装数据库-2"><span class="nav-number">6.2.</span> <span class="nav-text">安装数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置配置文件-1"><span class="nav-number">6.3.</span> <span class="nav-text">配置配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置systemd"><span class="nav-number">6.4.</span> <span class="nav-text">配置systemd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动服务和查看状态-1"><span class="nav-number">6.5.</span> <span class="nav-text">启动服务和查看状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开机启动-2"><span class="nav-number">6.6.</span> <span class="nav-text">开机启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安全初始化-1"><span class="nav-number">6.7.</span> <span class="nav-text">安全初始化</span></a></li></ol></li></ol></div></div></section></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"><div class="copyright">&copy; <span itemprop="copyrightYear">2018</span><span class="with-love"><i class="fa fa-user"></i></span> <span class="author" itemprop="copyrightHolder">豫ICP备18001328号</span></div><div class="busuanzi-count"><script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script> <span class="site-uv">本站访客数量<i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span> 人次</span> <span class="site-pv">本站总访问量<i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span> 次</span></div></div></footer><div class="back-to-top"><i class="fa fa-arrow-up"></i> <span id="scrollpercent"><span>0</span>%</span></div></div><script type="text/javascript">"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script><script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script><script type="text/javascript" src="/js/src/utils.js?v=6.0.3"></script><script type="text/javascript" src="/js/src/motion.js?v=6.0.3"></script><script type="text/javascript" src="/js/src/affix.js?v=6.0.3"></script><script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.3"></script><script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.3"></script><script type="text/javascript" src="/js/src/post-details.js?v=6.0.3"></script><script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.3"></script><script type="text/javascript">!function(e,t){var n,c=e.getElementsByTagName(t)[0];"function"!=typeof LivereTower&&((n=e.createElement(t)).src="https://cdn-city.livere.com/js/embed.dist.js",n.async=!0,c.parentNode.insertBefore(n,c))}(document,"script")</script><link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css"><script src="/lib/algolia-instant-search/instantsearch.min.js"></script><script src="/js/src/algolia-search.js?v=6.0.3"></script><script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script><script>AV.initialize("TMOrGzssdxpnAgGxNieILF7U-gzGzoHsz","kLGRXget1JuElgh8wU2l9799")</script><script>function showTime(e){var t=new AV.Query(e),n=[],o=$(".leancloud_visitors");o.each(function(){n.push($(this).attr("id").trim())}),t.containedIn("url",n),t.find().done(function(e){var t=".leancloud-visitors-count";if(0!==e.length){for(var i=0;i<e.length;i++){var s=e[i],r=s.get("url"),l=s.get("time"),c=document.getElementById(r);$(c).find(t).text(l)}for(i=0;i<n.length;i++){r=n[i],c=document.getElementById(r);var u=$(c).find(t);""==u.text()&&u.text(0)}}else o.find(t).text(0)}).fail(function(e,t){console.log("Error: "+t.code+" "+t.message)})}function addCount(e){var t=$(".leancloud_visitors"),n=t.attr("id").trim(),o=t.attr("data-flag-title").trim(),i=new AV.Query(e);i.equalTo("url",n),i.find({success:function(t){if(t.length>0){var i=t[0];i.fetchWhenSave(!0),i.increment("time"),i.save(null,{success:function(e){$(document.getElementById(n)).find(".leancloud-visitors-count").text(e.get("time"))},error:function(e,t){console.log("Failed to save Visitor num, with error message: "+t.message)}})}else{var s=new e,r=new AV.ACL;r.setPublicReadAccess(!0),r.setPublicWriteAccess(!0),s.setACL(r),s.set("title",o),s.set("url",n),s.set("time",1),s.save(null,{success:function(e){$(document.getElementById(n)).find(".leancloud-visitors-count").text(e.get("time"))},error:function(e,t){console.log("Failed to create")}})}},error:function(e){console.log("Error:"+e.code+" "+e.message)}})}$(function(){var e=AV.Object.extend("Counter");1==$(".leancloud_visitors").length?addCount(e):$(".post-title-link").length>1&&showTime(e)})</script><script>!function(){var t=document.createElement("script"),e=window.location.protocol.split(":")[0];t.src="https"===e?"https://zz.bdstatic.com/linksubmit/push.js":"http://push.zhanzhang.baidu.com/push.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}()</script><script type="text/javascript" src="/js/src/love.js"></script><div id="hexo-helper-live2d"><canvas id="live2dcanvas" width="300" height="300"></canvas></div><style>#live2dcanvas{position:fixed;width:300px;height:300px;opacity:.7;left:0;z-index:999;pointer-events:none;bottom:-20px}</style><script type="text/javascript" src="/live2d/device.min.js"></script><script type="text/javascript">
 const loadScript = function loadScript(c,b){var a=document.createElement("script");a.type="text/javascript";"undefined"!=typeof b&&(a.readyState?a.onreadystatechange=function(){if("loaded"==a.readyState||"complete"==a.readyState)a.onreadystatechange=null,b()}:a.onload=function(){b()});a.src=c;document.body.appendChild(a)};
 (function(){
   if((typeof(device) != 'undefined') && (device.mobile())){
-    document.getElementById("live2dcanvas").style.width = '75px';
+    document.getElementById("live2dcanvas").style.width = '150px';
     document.getElementById("live2dcanvas").style.height = '150px';
   }else
     if (typeof(device) === 'undefined') console.error('Cannot find current-device script.');
-  loadScript("/live2d/script.js", function(){loadlive2d("live2dcanvas", "/live2d/assets/z16.model.json", 0.5);});
+  loadScript("/live2d/script.js", function(){loadlive2d("live2dcanvas", "/live2d/assets/wanko.model.json", 0.5);});
 })();
-</script>
-
-</body>
-</html>
+</script></body></html>
