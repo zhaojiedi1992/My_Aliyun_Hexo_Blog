@@ -13,6 +13,10 @@
 <meta name="theme-color" content="#222">
 
 
+
+
+
+
   
   
     
@@ -48,10 +52,6 @@
 
 
 
-  
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
-
 
 
 
@@ -60,25 +60,19 @@
 
 <link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=6.0.3" rel="stylesheet" type="text/css" />
 
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.3">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.jpg?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.3">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.jpg?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.3">
 
 
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
-
-
-
-
-
-  <meta name="keywords" content="LinuxPanda,zhaojiedi1992,赵杰迪,Hexo, NexT" />
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.3" color="#222">
 
 
 
@@ -87,6 +81,37 @@
 
 
 
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.0.3',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: 'AHGJT89GR9',
+      apiKey: 'fabf7792bd5bfea54e718df3268199d7',
+      indexName: 'blog',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"输入查找内容","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="LinuxPanda,zhaojiedi1992,赵杰迪,Hexo, NexT,linux,panda" />
 
 
 <meta name="description" content="my site">
@@ -102,29 +127,6 @@
 
 
 
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Gemini',
-    version: '5.1.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
-    fancybox: true,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: 'AHGJT89GR9',
-      apiKey: 'fabf7792bd5bfea54e718df3268199d7',
-      indexName: 'blog',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"输入查找内容","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
 
 
 
@@ -132,22 +134,14 @@
 
 
 
-
-
-<script>
-    (function(){
-        if(''){
-            if (prompt('请输入文章密码') !== ''){
-                alert('密码错误！');
-                history.back();
-            }
-        }
-    })();
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
 </script>
-
-
   <title>LinuxPanda - zhaojiedi1992</title>
   
+
 
 
 
@@ -166,6 +160,33 @@
 
 
 
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -180,7 +201,7 @@
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
+      <div class="header-inner"> <div class="site-brand-wrapper">
   <div class="site-meta custom-logo">
     
 
@@ -212,113 +233,69 @@
     <ul id="menu" class="menu">
       
         
-        <li class="menu-item menu-item-home">
+        <li class="menu-item menu-item-主页">
           <a href="/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            首页
-          </a>
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />主页</a>
         </li>
       
         
-        <li class="menu-item menu-item-tags">
+        <li class="menu-item menu-item-标签">
           <a href="/tags/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            标签
-          </a>
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
         </li>
       
         
-        <li class="menu-item menu-item-database">
+        <li class="menu-item menu-item-数据库">
           <a href="/categories/database/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-database"></i> <br />
-            
-            database
-          </a>
+            <i class="menu-item-icon fa fa-fw fa-database"></i> <br />数据库</a>
         </li>
       
         
-        <li class="menu-item menu-item-categories">
+        <li class="menu-item menu-item-目录">
           <a href="/categories/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
-            
-            分类
-          </a>
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />目录</a>
         </li>
       
         
-        <li class="menu-item menu-item-archives">
+        <li class="menu-item menu-item-归档">
           <a href="/archives/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            归档
-          </a>
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
         </li>
       
         
         <li class="menu-item menu-item-python">
           <a href="/categories/python/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-file-code-o"></i> <br />
-            
-            Python
-          </a>
+            <i class="menu-item-icon fa fa-fw fa-file-code-o"></i> <br />Python</a>
         </li>
       
         
         <li class="menu-item menu-item-linux">
           <a href="/categories/linux/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />
-            
-            Linux
-          </a>
+            <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />Linux</a>
         </li>
       
         
         <li class="menu-item menu-item-随笔">
           <a href="/categories/essay/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-pencil-square-o"></i> <br />
-            
-            随笔
-          </a>
+            <i class="menu-item-icon fa fa-fw fa-pencil-square-o"></i> <br />随笔</a>
         </li>
       
         
         <li class="menu-item menu-item-赞助">
           <a href="/donate" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-credit-card"></i> <br />
-            
-            赞助
-          </a>
+            <i class="menu-item-icon fa fa-fw fa-credit-card"></i> <br />赞助</a>
         </li>
       
         
         <li class="menu-item menu-item-爬虫">
           <a href="/categories/spider/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />
-            
-            爬虫
-          </a>
+            <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />爬虫</a>
         </li>
       
         
-        <li class="menu-item menu-item-about">
+        <li class="menu-item menu-item-关于">
           <a href="/about/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user-o"></i> <br />
-            
-            关于
-          </a>
+            <i class="menu-item-icon fa fa-fw fa-user-o"></i> <br />关于</a>
         </li>
       
 
@@ -328,10 +305,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
-            
-            搜索
-          </a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />Search</a>
         </li>
       
     </ul>
@@ -368,9 +342,15 @@
 </nav>
 
 
+  
+
+
 
  </div>
     </header>
+
+    
+
 
     <main id="main" class="main">
       <div class="main-inner">
@@ -385,6 +365,8 @@
 
   
   
+  
+
   
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
@@ -421,27 +403,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-02T15:42:13+08:00">
-                2018-02-02
-              </time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-02T15:42:13+08:00">2018-02-02</time>
             
 
             
-              <span class="post-meta-divider">|</span>
             
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2018-02-07T22:20:52+08:00">
-                2018-02-07
-              </time>
             
           </span>
 
@@ -454,14 +423,10 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/database/" itemprop="url" rel="index">
-                    <span itemprop="name">database</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/database/" itemprop="url" rel="index"><span itemprop="name">database</span></a></span>
 
                 
                 
@@ -481,7 +446,7 @@
                  <i class="fa fa-eye"></i>
                </span>
                
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
+                 <span class="post-meta-item-text">Visitors&#58;</span>
                
                  <span class="leancloud-visitors-count"></span>
              </span>
@@ -489,39 +454,6 @@
 
           
 
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  2,965
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  15
-                </span>
-              
-            </div>
           
 
           
@@ -547,12 +479,13 @@ mysqld_multi
 这个是使用单独的配置文件来配置多个实例，不过管理实例还是很方便的。
 
 多个sysv配置
-这个方式相当于每个mairadb实例为一
+这个方式相当于每个mairadb实例为一个不同的服务而已，每个实例一套sysv脚本。 配置起来比较简单，如果实例过多管理起来比较麻烦。
+
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/02/02/mariadb多实例的三种实现/#more" rel="contents">
-              阅读全文 &raquo;
+            <a class="btn" href="/2018/02/02/mariadb多实例的三种实现/" rel="contents">
+              Read more &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -563,9 +496,6 @@ mysqld_multi
     
     
 
-    <div>
-          
-    </div>
     
 
     
@@ -598,6 +528,8 @@ mysqld_multi
 
   
   
+  
+
   
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
@@ -634,27 +566,14 @@ mysqld_multi
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-07T20:48:41+08:00">
-                2018-02-07
-              </time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-07T20:48:41+08:00">2018-02-07</time>
             
 
             
-              <span class="post-meta-divider">|</span>
             
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2018-02-07T20:50:24+08:00">
-                2018-02-07
-              </time>
             
           </span>
 
@@ -667,14 +586,10 @@ mysqld_multi
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/about/" itemprop="url" rel="index">
-                    <span itemprop="name">about</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/about/" itemprop="url" rel="index"><span itemprop="name">about</span></a></span>
 
                 
                 
@@ -694,7 +609,7 @@ mysqld_multi
                  <i class="fa fa-eye"></i>
                </span>
                
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
+                 <span class="post-meta-item-text">Visitors&#58;</span>
                
                  <span class="leancloud-visitors-count"></span>
              </span>
@@ -702,39 +617,6 @@ mysqld_multi
 
           
 
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  16
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
           
 
           
@@ -761,8 +643,8 @@ mysqld_multi
           
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/02/07/aboutme/#more" rel="contents">
-              阅读全文 &raquo;
+            <a class="btn" href="/2018/02/07/aboutme/" rel="contents">
+              Read more &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -773,9 +655,6 @@ mysqld_multi
     
     
 
-    <div>
-          
-    </div>
     
 
     
@@ -808,6 +687,8 @@ mysqld_multi
 
   
   
+  
+
   
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
@@ -844,27 +725,14 @@ mysqld_multi
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-02T19:09:03+08:00">
-                2018-02-02
-              </time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-02T19:09:03+08:00">2018-02-02</time>
             
 
             
-              <span class="post-meta-divider">|</span>
             
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2018-02-06T20:10:00+08:00">
-                2018-02-06
-              </time>
             
           </span>
 
@@ -877,14 +745,10 @@ mysqld_multi
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/database/" itemprop="url" rel="index">
-                    <span itemprop="name">database</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/database/" itemprop="url" rel="index"><span itemprop="name">database</span></a></span>
 
                 
                 
@@ -904,7 +768,7 @@ mysqld_multi
                  <i class="fa fa-eye"></i>
                </span>
                
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
+                 <span class="post-meta-item-text">Visitors&#58;</span>
                
                  <span class="leancloud-visitors-count"></span>
              </span>
@@ -912,39 +776,6 @@ mysqld_multi
 
           
 
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  9
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
           
 
           
@@ -977,8 +808,8 @@ test9
           
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/02/02/test_database/#more" rel="contents">
-              阅读全文 &raquo;
+            <a class="btn" href="/2018/02/02/test_database/" rel="contents">
+              Read more &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -989,9 +820,6 @@ test9
     
     
 
-    <div>
-          
-    </div>
     
 
     
@@ -1024,6 +852,8 @@ test9
 
   
   
+  
+
   
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
@@ -1060,27 +890,14 @@ test9
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-02T19:08:56+08:00">
-                2018-02-02
-              </time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-02T19:08:56+08:00">2018-02-02</time>
             
 
             
-              <span class="post-meta-divider">|</span>
             
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2018-02-06T20:10:00+08:00">
-                2018-02-06
-              </time>
             
           </span>
 
@@ -1093,14 +910,10 @@ test9
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/essay/" itemprop="url" rel="index">
-                    <span itemprop="name">essay</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/essay/" itemprop="url" rel="index"><span itemprop="name">essay</span></a></span>
 
                 
                 
@@ -1120,7 +933,7 @@ test9
                  <i class="fa fa-eye"></i>
                </span>
                
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
+                 <span class="post-meta-item-text">Visitors&#58;</span>
                
                  <span class="leancloud-visitors-count"></span>
              </span>
@@ -1128,39 +941,6 @@ test9
 
           
 
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  0
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
           
 
           
@@ -1185,8 +965,8 @@ test9
           
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/02/02/test_essay/#more" rel="contents">
-              阅读全文 &raquo;
+            <a class="btn" href="/2018/02/02/test_essay/" rel="contents">
+              Read more &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -1197,9 +977,6 @@ test9
     
     
 
-    <div>
-          
-    </div>
     
 
     
@@ -1232,6 +1009,8 @@ test9
 
   
   
+  
+
   
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
@@ -1268,27 +1047,14 @@ test9
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-02T19:08:49+08:00">
-                2018-02-02
-              </time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-02T19:08:49+08:00">2018-02-02</time>
             
 
             
-              <span class="post-meta-divider">|</span>
             
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2018-02-06T20:10:00+08:00">
-                2018-02-06
-              </time>
             
           </span>
 
@@ -1301,14 +1067,10 @@ test9
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a></span>
 
                 
                 
@@ -1328,7 +1090,7 @@ test9
                  <i class="fa fa-eye"></i>
                </span>
                
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
+                 <span class="post-meta-item-text">Visitors&#58;</span>
                
                  <span class="leancloud-visitors-count"></span>
              </span>
@@ -1336,39 +1098,6 @@ test9
 
           
 
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  0
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
           
 
           
@@ -1393,8 +1122,8 @@ test9
           
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/02/02/test_linux/#more" rel="contents">
-              阅读全文 &raquo;
+            <a class="btn" href="/2018/02/02/test_linux/" rel="contents">
+              Read more &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -1405,9 +1134,6 @@ test9
     
     
 
-    <div>
-          
-    </div>
     
 
     
@@ -1440,6 +1166,8 @@ test9
 
   
   
+  
+
   
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
@@ -1476,27 +1204,14 @@ test9
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-02T19:08:49+08:00">
-                2018-02-02
-              </time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-02T19:08:49+08:00">2018-02-02</time>
             
 
             
-              <span class="post-meta-divider">|</span>
             
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2018-02-06T20:10:00+08:00">
-                2018-02-06
-              </time>
             
           </span>
 
@@ -1509,14 +1224,10 @@ test9
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/spider/" itemprop="url" rel="index">
-                    <span itemprop="name">spider</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spider/" itemprop="url" rel="index"><span itemprop="name">spider</span></a></span>
 
                 
                 
@@ -1536,7 +1247,7 @@ test9
                  <i class="fa fa-eye"></i>
                </span>
                
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
+                 <span class="post-meta-item-text">Visitors&#58;</span>
                
                  <span class="leancloud-visitors-count"></span>
              </span>
@@ -1544,39 +1255,6 @@ test9
 
           
 
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  0
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
           
 
           
@@ -1601,8 +1279,8 @@ test9
           
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/02/02/test_spider/#more" rel="contents">
-              阅读全文 &raquo;
+            <a class="btn" href="/2018/02/02/test_spider/" rel="contents">
+              Read more &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -1613,9 +1291,6 @@ test9
     
     
 
-    <div>
-          
-    </div>
     
 
     
@@ -1648,6 +1323,8 @@ test9
 
   
   
+  
+
   
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
@@ -1684,27 +1361,14 @@ test9
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-02T19:08:30+08:00">
-                2018-02-02
-              </time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-02T19:08:30+08:00">2018-02-02</time>
             
 
             
-              <span class="post-meta-divider">|</span>
             
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2018-02-06T20:10:00+08:00">
-                2018-02-06
-              </time>
             
           </span>
 
@@ -1717,14 +1381,10 @@ test9
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">分类于</span>
+                <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a></span>
 
                 
                 
@@ -1744,7 +1404,7 @@ test9
                  <i class="fa fa-eye"></i>
                </span>
                
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
+                 <span class="post-meta-item-text">Visitors&#58;</span>
                
                  <span class="leancloud-visitors-count"></span>
              </span>
@@ -1752,39 +1412,6 @@ test9
 
           
 
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  0
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
           
 
           
@@ -1809,8 +1436,8 @@ test9
           
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/02/02/test_python/#more" rel="contents">
-              阅读全文 &raquo;
+            <a class="btn" href="/2018/02/02/test_python/" rel="contents">
+              Read more &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -1821,9 +1448,6 @@ test9
     
     
 
-    <div>
-          
-    </div>
     
 
     
@@ -1856,6 +1480,8 @@ test9
 
   
   
+  
+
   
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
@@ -1892,27 +1518,14 @@ test9
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">Posted on</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-02T19:03:53+08:00">
-                2018-02-02
-              </time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-02T19:03:53+08:00">2018-02-02</time>
             
 
             
-              <span class="post-meta-divider">|</span>
             
 
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2018-02-06T20:10:00+08:00">
-                2018-02-06
-              </time>
             
           </span>
 
@@ -1930,7 +1543,7 @@ test9
                  <i class="fa fa-eye"></i>
                </span>
                
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
+                 <span class="post-meta-item-text">Visitors&#58;</span>
                
                  <span class="leancloud-visitors-count"></span>
              </span>
@@ -1938,39 +1551,6 @@ test9
 
           
 
-          
-            <div class="post-wordcount">
-              
-                
-                  <span class="post-meta-divider">|</span>
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  0
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
           
 
           
@@ -1995,8 +1575,8 @@ test9
           
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/02/02/test/#more" rel="contents">
-              阅读全文 &raquo;
+            <a class="btn" href="/2018/02/02/test/" rel="contents">
+              Read more &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -2007,9 +1587,6 @@ test9
     
     
 
-    <div>
-          
-    </div>
     
 
     
@@ -2044,9 +1621,6 @@ test9
           </div>
           
 
-
-          
-
         </div>
         
           
@@ -2079,72 +1653,100 @@ test9
               <p class="site-description motion-element" itemprop="description"></p>
           </div>
 
-          <nav class="site-state motion-element">
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
 
-            
-              <div class="site-state-item site-state-posts">
               
-                <a href="/archives/">
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
               
-                  <span class="site-state-item-count">8</span>
-                  <span class="site-state-item-name">日志</span>
-                </a>
-              </div>
-            
 
-            
               
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
               
-              <div class="site-state-item site-state-categories">
-                <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
-                  <span class="site-state-item-name">分类</span>
-                </a>
-              </div>
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
-                  <span class="site-state-item-count">8</span>
-                  <span class="site-state-item-name">标签</span>
-                </a>
-              </div>
-            
-
-          </nav>
+            </nav>
+          
 
           
 
           
             <div class="links-of-author motion-element">
-                
-                  <span class="links-of-author-item">
-                    <a href="https://github.com/zhaojiedi1992" target="_blank" title="GitHub">
-                      
-                        <i class="fa fa-fw fa-github"></i>GitHub</a>
-                  </span>
-                
-                  <span class="links-of-author-item">
-                    <a href="mailto:zhaojiedi1992@outlook.com" target="_blank" title="E-Mail">
-                      
-                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-                  </span>
-                
-                  <span class="links-of-author-item">
-                    <a href="http://wpa.qq.com/msgrd?v=3&uin=1072892917&site=qq&menu=yes" target="_blank" title="QQ">
-                      
-                        <i class="fa fa-fw fa-qq"></i>QQ</a>
-                  </span>
-                
-                  <span class="links-of-author-item">
-                    <a href="http://www.cnblogs.com/zhaojiedi1992" target="_blank" title="Cnblogs">
-                      
-                        <i class="fa fa-fw fa-wordpress"></i>Cnblogs</a>
-                  </span>
-                
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/zhaojiedi1992" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:zhaojiedi1992@outlook.com" target="_blank" title="E-Mail" rel="external nofollow"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://wpa.qq.com/msgrd?v=3&uin=1072892917&site=qq&menu=yes" target="_blank" title="QQ" rel="external nofollow"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://www.cnblogs.com/zhaojiedi1992" target="_blank" title="Cnblogs" rel="external nofollow"><i class="fa fa-fw fa-wordpress"></i>Cnblogs</a>
+                  
+                </span>
+              
             </div>
           
 
@@ -2156,7 +1758,7 @@ test9
             <div class="links-of-blogroll motion-element links-of-blogroll-block">
               <div class="links-of-blogroll-title">
                 <i class="fa  fa-fw fa-link"></i>
-                友情推荐
+                友情链接
               </div>
               <ul class="links-of-blogroll-list">
                 
@@ -2172,6 +1774,9 @@ test9
             </div>
           
 
+          
+            
+          
           
 
         </div>
@@ -2198,7 +1803,14 @@ test9
   <span class="author" itemprop="copyrightHolder">豫ICP备18001328号</span>
 
   
+
+  
 </div>
+
+
+  
+
+
 
 
 
@@ -2221,7 +1833,7 @@ test9
 
   
     <span class="site-pv">
-      本站总访问量<i class="fa fa-eye"></i>
+      本站总访问量 <i class="fa fa-eye"></i>
       <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
       次
     </span>
@@ -2252,8 +1864,6 @@ test9
 
   </div>
 
-
-
   
 
 <script type="text/javascript">
@@ -2270,10 +1880,14 @@ test9
 
 
 
+
+
+
+
+
   
 
 
-  
 
 
 
@@ -2292,27 +1906,12 @@ test9
 
   
   
-    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-  
-
-  
-  
     <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
   
 
   
   
     <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
   
 
   
@@ -2324,36 +1923,32 @@ test9
   
 
 
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.3"></script>
 
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.3"></script>
 
 
 
   
-
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=6.0.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.3"></script>
 
 
 
   
 
-
   
 
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.3"></script>
+
+
+
+  
 
 
 
@@ -2380,8 +1975,6 @@ test9
 
 
 
-
-
   
 
 
@@ -2397,7 +1990,7 @@ test9
   <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
   
 
-  <script src="/js/src/algolia-search.js?v=5.1.4"></script>
+  <script src="/js/src/algolia-search.js?v=6.0.3"></script>
 
 
 
@@ -2530,30 +2123,32 @@ test9
 
 
   
+
+  
   
 
   
 
   
-  <script type="text/javascript" src="/js/src/js.cookie.js?v=5.1.4"></script>
-  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=5.1.4"></script>
-
 
   
+
+  
+
 
   <!-- 页面点击小红心 -->
   <script type="text/javascript" src="/js/src/love.js"></script>
   
 <div id="hexo-helper-live2d">
-  <canvas id="live2dcanvas" width="300" height="300"></canvas>
+  <canvas id="live2dcanvas" width="150" height="300"></canvas>
 </div>
 <style>
   #live2dcanvas{
     position: fixed;
-    width: 300px;
+    width: 150px;
     height: 300px;
     opacity:0.7;
-    left: 0px;
+    right: 0px;
     z-index: 999;
     pointer-events: none;
     bottom: -20px;
@@ -2564,14 +2159,13 @@ test9
 const loadScript = function loadScript(c,b){var a=document.createElement("script");a.type="text/javascript";"undefined"!=typeof b&&(a.readyState?a.onreadystatechange=function(){if("loaded"==a.readyState||"complete"==a.readyState)a.onreadystatechange=null,b()}:a.onload=function(){b()});a.src=c;document.body.appendChild(a)};
 (function(){
   if((typeof(device) != 'undefined') && (device.mobile())){
-    document.getElementById("live2dcanvas").style.width = '150px';
+    document.getElementById("live2dcanvas").style.width = '75px';
     document.getElementById("live2dcanvas").style.height = '150px';
   }else
     if (typeof(device) === 'undefined') console.error('Cannot find current-device script.');
-  loadScript("/live2d/script.js", function(){loadlive2d("live2dcanvas", "/live2d/assets/wanko.model.json", 0.5);});
+  loadScript("/live2d/script.js", function(){loadlive2d("live2dcanvas", "/live2d/assets/z16.model.json", 0.5);});
 })();
 </script>
 
-  
 </body>
 </html>

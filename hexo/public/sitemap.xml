@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.linuxpanda.tech/lib/Han/README.html</loc>
+    
+    <lastmod>2018-02-08T02:44:33.668Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://blog.linuxpanda.tech/donate/index.html</loc>
     
     <lastmod>2018-02-07T14:35:48.541Z</lastmod>
@@ -107,14 +114,14 @@
   </url>
   
   <url>
-    <loc>http://blog.linuxpanda.tech/2018/02/02/test_linux/</loc>
+    <loc>http://blog.linuxpanda.tech/2018/02/02/test_python/</loc>
     
     <lastmod>2018-02-06T12:10:00.706Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://blog.linuxpanda.tech/2018/02/02/test_python/</loc>
+    <loc>http://blog.linuxpanda.tech/2018/02/02/test_linux/</loc>
     
     <lastmod>2018-02-06T12:10:00.706Z</lastmod>
     
