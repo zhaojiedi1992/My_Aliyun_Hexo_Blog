@@ -80,26 +80,6 @@
 
     
   <url>
-    <loc>http://blog.linuxpanda.tech/2018/02/02/test_python/</loc>
-    <lastmod>2018-02-06T12:10:00.706Z</lastmod>
-    <data>
-        <display>
-        <title>test_python</title>
-        <pubTime>2018-02-02T11:08:30.000Z</pubTime>
-        
-        <tag>python</tag>
-         
-         
-           
-             
-              <breadCrumb title="python" url="http://blog.linuxpanda.tech/categories/python/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://blog.linuxpanda.tech/2018/02/02/test_essay/</loc>
     <lastmod>2018-02-06T12:10:00.706Z</lastmod>
     <data>
@@ -113,6 +93,26 @@
            
              
               <breadCrumb title="essay" url="http://blog.linuxpanda.tech/categories/essay/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.linuxpanda.tech/2018/02/02/test_python/</loc>
+    <lastmod>2018-02-06T12:10:00.706Z</lastmod>
+    <data>
+        <display>
+        <title>test_python</title>
+        <pubTime>2018-02-02T11:08:30.000Z</pubTime>
+        
+        <tag>python</tag>
+         
+         
+           
+             
+              <breadCrumb title="python" url="http://blog.linuxpanda.tech/categories/python/"/>
           
         </display>
     </data>
@@ -140,21 +140,6 @@
 
     
   <url>
-    <loc>http://blog.linuxpanda.tech/2018/02/02/test/</loc>
-    <lastmod>2018-02-06T12:10:00.705Z</lastmod>
-    <data>
-        <display>
-        <title>test</title>
-        <pubTime>2018-02-02T11:03:53.000Z</pubTime>
-        
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://blog.linuxpanda.tech/2018/02/02/test_database/</loc>
     <lastmod>2018-02-06T12:10:00.705Z</lastmod>
     <data>
@@ -169,6 +154,21 @@
              
               <breadCrumb title="database" url="http://blog.linuxpanda.tech/categories/database/"/>
           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.linuxpanda.tech/2018/02/02/test/</loc>
+    <lastmod>2018-02-06T12:10:00.705Z</lastmod>
+    <data>
+        <display>
+        <title>test</title>
+        <pubTime>2018-02-02T11:03:53.000Z</pubTime>
+        
+         
+           
         </display>
     </data>
     </url>

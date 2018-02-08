@@ -10,4 +10,11 @@ Disallow: /vendors/
 Disallow: /fancybox/
 Sitemap: http://blog.linuxpanda.tech/sitemap.xml
 Sitemap: http://blog.linuxpanda.tech/baidusitemap.xml
-
+Sitemap: http://my-study-linux-services.linuxpanda.tech/sitemap.xml
+Sitemap: http://my-study-gawk.linuxpanda.tech/sitemap.xml
+Sitemap: http://my-study-linux.linuxpanda.tech/sitemap.xml
+Sitemap: http://my-study-lvm.linuxpanda.tech/sitemap.xml
+Sitemap: http://my-study-sed.linuxpanda.tech/sitemap.xml
+Sitemap: http://my-study-grep.linuxpanda.tech/sitemap.xml
+Sitemap: http://my-study-restructuredtext.linuxpanda.tech/sitemap.xml
+Sitemap: http://my-study-bash-programming.linuxpanda.tech/sitemap.xml

@@ -23,38 +23,40 @@ top: 100
 	
 .. _my-study-linux-services-bak: http://my-study-linux-services.readthedocs.io
 
-.. _my-study-gawk: http://my-study-linux-services.linuxpanda.tech
+.. _my-study-gawk: http://my-study-gawk.linuxpanda.tech
 	
-.. _my-study-gawk-bak: http://my-study-linux-services.readthedocs.io
+.. _my-study-gawk-bak: http://my-study-gawk.readthedocs.io
 
 
-.. _my-study-linux: http://my-study-linux-services.linuxpanda.tech
+.. _my-study-linux: http://my-study-linux.linuxpanda.tech
 	
-.. _my-study-linux-bak: http://my-study-linux-services.readthedocs.io
+.. _my-study-linux-bak: http://my-study-linux.readthedocs.io
 
 
-.. _my-study-lvm: http://my-study-linux-services.linuxpanda.tech
+.. _my-study-lvm: http://my-study-lvm.linuxpanda.tech
 	
-.. _my-study-lvm-bak: http://my-study-linux-services.readthedocs.io
+.. _my-study-lvm-bak: http://my-study-lvm.readthedocs.io
 
 
-.. _my-study-restructuredtext: http://my-study-linux-services.linuxpanda.tech
+.. _my-study-restructuredtext: http://my-study-restructuredtext.linuxpanda.tech
 	
-.. _my-study-restructuredtext-bak: http://my-study-linux-services.readthedocs.io
+.. _my-study-restructuredtext-bak: http://my-study-restructuredtext.readthedocs.io
 
 
-.. _my-study-sed: http://my-study-linux-services.linuxpanda.tech
+.. _my-study-sed: http://my-study-sed.linuxpanda.tech
 	
-.. _my-study-sed-bak: http://my-study-linux-services.readthedocs.io
+.. _my-study-sed-bak: http://my-study-sed.readthedocs.io
 
-.. _my-study-bash-programming: http://my-study-linux-services.linuxpanda.tech
+.. _my-study-bash-programming: http://my-study-bash-programming.linuxpanda.tech
 	
-.. _my-study-bash-programming-bak: http://my-study-linux-services.readthedocs.io
+.. _my-study-bash-programming-bak: http://my-study-bash-programming.readthedocs.io
 
 				
-.. _my-study-grep: http://my-study-linux-services.linuxpanda.tech
+.. _my-study-grep: http://my-study-grep.linuxpanda.tech
 	
-.. _my-study-grep-bak: http://my-study-linux-services.readthedocs.io
+.. _my-study-grep-bak: http://my-study-grep.readthedocs.io
 
+
+上面的主地址是我自己的服务器上配置的虚拟主机，备用地址是托管在readthedocs网上的。
 
 .. note:: 有啥问题，欢迎给我留言。
