@@ -635,11 +635,11 @@
         
         <tags>
             
-            <tag> linux </tag>
-            
             <tag> mysql </tag>
             
             <tag> mariadb </tag>
+            
+            <tag> linux </tag>
             
         </tags>
         

@@ -13,11 +13,11 @@
         <title>mariadb多实例的三种实现</title>
         <pubTime>2018-02-02T07:42:13.000Z</pubTime>
         
-        <tag>linux</tag>
-         
         <tag>mysql</tag>
          
         <tag>mariadb</tag>
+         
+        <tag>linux</tag>
          
          
            
@@ -100,26 +100,6 @@
 
     
   <url>
-    <loc>http://blog.linuxpanda.tech/2018/02/02/test_essay/</loc>
-    <lastmod>2018-02-06T12:10:00.706Z</lastmod>
-    <data>
-        <display>
-        <title>test_essay</title>
-        <pubTime>2018-02-02T11:08:56.000Z</pubTime>
-        
-        <tag>essay</tag>
-         
-         
-           
-             
-              <breadCrumb title="essay" url="http://blog.linuxpanda.tech/categories/essay/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://blog.linuxpanda.tech/2018/02/02/test_linux/</loc>
     <lastmod>2018-02-06T12:10:00.706Z</lastmod>
     <data>
@@ -133,6 +113,26 @@
            
              
               <breadCrumb title="linux" url="http://blog.linuxpanda.tech/categories/linux/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.linuxpanda.tech/2018/02/02/test_essay/</loc>
+    <lastmod>2018-02-06T12:10:00.706Z</lastmod>
+    <data>
+        <display>
+        <title>test_essay</title>
+        <pubTime>2018-02-02T11:08:56.000Z</pubTime>
+        
+        <tag>essay</tag>
+         
+         
+           
+             
+              <breadCrumb title="essay" url="http://blog.linuxpanda.tech/categories/essay/"/>
           
         </display>
     </data>
