@@ -11,6 +11,7 @@ top: 100
    
     "my-study-linux","linu基础学习",my-study-linux_,my-study-linux-bak_
     "my-study-linux-services","linux服务学习",my-study-linux-services_,my-study-linux-services-bak_
+    "my-study-python","python学习",my-study-python_,my-study-python-bak_
     "my-study-gawk","linux awk学习",my-study-gawk_,my-study-gawk-bak_
     "my-study-sed","linux sed学习",my-study-sed_,my-study-sed-bak_
     "my-study-grep","linux grep 学习",my-study-grep_,my-study-grep-bak_
@@ -56,7 +57,13 @@ top: 100
 	
 .. _my-study-grep-bak: http://my-study-grep.readthedocs.io
 
+				
+.. _my-study-python: http://my-study-python.linuxpanda.tech
+	
+.. _my-study-python-bak: http://my-study-python.readthedocs.io
 
-上面的主地址是我自己的服务器上配置的虚拟主机，备用地址是托管在readthedocs网上的。
+上面的主地址是我自己的服务器上配置的虚拟主机，备用地址是托管在 readthedocs_ 网上的。
+
+.. _readthedocs: https://readthedocs.org/
 
 .. note:: 有啥问题，欢迎给我留言。
