@@ -266,27 +266,6 @@
     </entry>
     
     <entry>
-      <title><![CDATA[test_spider]]></title>
-      <url>/2018/02/02/test_spider/</url>
-      <content type="html"><![CDATA[
-]]></content>
-      
-        <categories>
-            
-            <category> spider </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> spider </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[test_linux]]></title>
       <url>/2018/02/02/test_linux/</url>
       <content type="html"><![CDATA[
@@ -302,6 +281,27 @@
         <tags>
             
             <tag> linux </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[test_spider]]></title>
+      <url>/2018/02/02/test_spider/</url>
+      <content type="html"><![CDATA[
+]]></content>
+      
+        <categories>
+            
+            <category> spider </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> spider </tag>
             
         </tags>
         
