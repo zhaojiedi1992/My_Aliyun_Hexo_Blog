@@ -3,6 +3,140 @@
   
     
     <entry>
+      <title><![CDATA[使用七牛云存储提供一个数据分发服务]]></title>
+      <url>/2018/02/16/%E4%BD%BF%E7%94%A8%E4%B8%83%E7%89%9B%E4%BA%91%E5%AD%98%E5%82%A8%E6%8F%90%E4%BE%9B%E4%B8%80%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%88%86%E5%8F%91%E6%9C%8D%E5%8A%A1/</url>
+      <content type="html"><![CDATA[<h2 id="背景描述">背景描述</h2>
+<p>我个人在阿里云注册一个域名和购买了一个主机，平时整理写脚本和一些压缩包，放在自己的download目录，然后使用apache配合虚拟主机 共享出来，但是遇到问题了， 我自己的阿里云主机的带宽是1M的，下载速度真的慢，想想可以使用七牛云存储来改进下我的下载速度问题， 把我的改进过程给大家分享下。</p>
+<h2 id="七牛云简介">七牛云简介</h2>
+<p>（七牛云）隶属于上海七牛信息技术有限公司，七牛云是国内领先的企业级云服务商，专注于以数据管理为中心的云计算业务研发和运营，围绕富媒体 场景推出了对象存储、融合 CDN 加速、容器计算云、大数据平台、人工智能平台等产品，并提供一站式视频云解决方案。公司目前已位列国内云计算 行业第一阵营，为 70 多万家企业提供服务。</p>
+<h2 id="七牛云相关">七牛云相关</h2>
+<h3 id="账号注册">账号注册</h3>
+<p><a href="https://portal.qiniu.com/signup/choice" target="_blank" rel="noopener">注册地址</a></p>
+<h3 id="账号实名认证">账号实名认证</h3>
+<p>注册完毕需要下实名认证，很快的，大概1-2天就实名认证完毕了。</p>
+<h3 id="新建存储空间">新建存储空间</h3>
+<p><img src="/images/qiniu/新建存储.png" alt="image"></p>
+<h3 id="绑定域名">绑定域名</h3>
+<p><img src="/images/qiniu/绑定域名.png" alt="image"></p>
+<h3 id="设置默认域名连接">设置默认域名连接</h3>
+<p><img src="/images/qiniu/设置默认域名.png" alt="image"></p>
+<h3 id="查看cname">查看cname</h3>
+<p><img src="/images/qiniu/查看cname.png" alt="image"></p>
+<h3 id="设置cname">设置cname</h3>
+<p><img src="/images/qiniu/添加cname.png" alt="image"></p>
+<p>这个需要在自己的域名解析里面添加下这个cname的记录项。</p>
+<h3 id="key的获取">key的获取</h3>
+<p><img src="/images/qiniu/七牛云key.png" alt="image"></p>
+<h2 id="python3的安装可选">python3的安装(可选)</h2>
+<p><a href="https://repo.continuum.io/archive/Anaconda3-5.1.0-Linux-x86_64.sh" target="_blank" rel="noopener">python的安装</a></p>
+<p>这是一个bash脚本，下载下载下来运行就可以，注意设置下安装路径，我设置的是/usr/loca/python3</p>
+<h2 id="安装七牛云的python包">安装七牛云的python包</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1">[<span class="ex">root@www</span> qiniu]# /usr/local/python3/bin/pip install qiniu</a></code></pre></div>
+<p>安装完毕之后，我们就可以使用七牛云提供的pythonapi了。</p>
+<h2 id="上传文件">上传文件</h2>
+<h3 id="编辑config文件">编辑config文件</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1">[<span class="ex">root@www</span> qiniu]# vim /usr/local/python3/lib/python3.6/site-packages/qiniu/config.py</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co"># 修改超时时间</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="st">&#39;connection_timeout&#39;</span>: <span class="ex">300000</span>,        # 链接超时为时间为30s</a></code></pre></div>
+<p>因为我们自己上传的文件，可能很大，就会导致因链接时间过短而导致的上传失败，需要调整下timeout就可以了。</p>
+<h3 id="编写脚本">编写脚本</h3>
+<p><a href="https://developer.qiniu.com/kodo/sdk/1242/python#upload-flow" target="_blank" rel="noopener">官方api</a></p>
+<p>结合官方的api，我自己修改了下，如下。</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co"># -*- coding: utf-8 -*-</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co"># flake8: noqa</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="im">from</span> qiniu <span class="im">import</span> Auth, put_file, etag, urlsafe_base64_encode</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="im">import</span> qiniu.config</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="im">import</span> os</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="im">import</span> glob</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="im">import</span> json</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="im">import</span> jmespath</a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">hash_json_file <span class="op">=</span> <span class="st">&quot;/root/bin/hash_file.json&quot;</span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10">hash_json <span class="op">=</span> []</a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">hash_value <span class="op">=</span> []</a>
+<a class="sourceLine" id="cb3-12" data-line-number="12">need_add <span class="op">=</span> []</a>
+<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="cf">if</span> os.path.exists(hash_json_file):</a>
+<a class="sourceLine" id="cb3-14" data-line-number="14">        <span class="cf">with</span> <span class="bu">open</span>(hash_json_file) <span class="im">as</span> f:</a>
+<a class="sourceLine" id="cb3-15" data-line-number="15">                hash_json<span class="op">=</span>json.load(f)</a>
+<a class="sourceLine" id="cb3-16" data-line-number="16">                hash_value<span class="op">=</span>jmespath.search(<span class="st">&#39;[*].hash&#39;</span>,hash_json)</a>
+<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#print(hash_json)</span></a>
+<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#需要填写你的 Access Key 和 Secret Key</span></a>
+<a class="sourceLine" id="cb3-19" data-line-number="19">access_key <span class="op">=</span> <span class="st">&#39;6VGRI141Y1IHzO0WyIu9NKuKCPAMZsECmV80-sK0&#39;</span></a>
+<a class="sourceLine" id="cb3-20" data-line-number="20">secret_key <span class="op">=</span> <span class="st">&#39;1GQwv1f8qcIQn3o9Bq3_1xXP_JR_-GQPlZDfK7pu&#39;</span></a>
+<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="co">#构建鉴权对象</span></a>
+<a class="sourceLine" id="cb3-22" data-line-number="22">q <span class="op">=</span> Auth(access_key, secret_key)</a>
+<a class="sourceLine" id="cb3-23" data-line-number="23"><span class="co">#要上传的空间</span></a>
+<a class="sourceLine" id="cb3-24" data-line-number="24">bucket_name <span class="op">=</span> <span class="st">&#39;download&#39;</span></a>
+<a class="sourceLine" id="cb3-25" data-line-number="25">tmpfiles<span class="op">=</span>glob.glob(<span class="st">&quot;/git/download/**/*&quot;</span> ,recursive<span class="op">=</span><span class="va">True</span>)</a>
+<a class="sourceLine" id="cb3-26" data-line-number="26">files<span class="op">=</span>[x <span class="cf">for</span> x <span class="kw">in</span> tmpfiles <span class="cf">if</span> os.path.isfile(x)]</a>
+<a class="sourceLine" id="cb3-27" data-line-number="27"><span class="cf">for</span> file_item <span class="kw">in</span> files:</a>
+<a class="sourceLine" id="cb3-28" data-line-number="28">        <span class="bu">print</span>(<span class="st">&quot;=================&gt;start upload&quot;</span> <span class="op">+</span> file_item)</a>
+<a class="sourceLine" id="cb3-29" data-line-number="29">        <span class="co">#要上传文件的本地路径</span></a>
+<a class="sourceLine" id="cb3-30" data-line-number="30">        localfile <span class="op">=</span> file_item</a>
+<a class="sourceLine" id="cb3-31" data-line-number="31">        tmp_hash <span class="op">=</span> etag(localfile)</a>
+<a class="sourceLine" id="cb3-32" data-line-number="32">        <span class="cf">if</span> <span class="bu">len</span>(hash_value) <span class="op">&gt;</span> <span class="dv">0</span> <span class="kw">and</span>  tmp_hash <span class="kw">in</span> hash_value:</a>
+<a class="sourceLine" id="cb3-33" data-line-number="33">                <span class="bu">print</span>(<span class="st">&quot;========&gt;sikp&quot;</span> <span class="op">+</span> localfile)</a>
+<a class="sourceLine" id="cb3-34" data-line-number="34">                <span class="cf">continue</span></a>
+<a class="sourceLine" id="cb3-35" data-line-number="35">        <span class="co">#上传到七牛后保存的文件名</span></a>
+<a class="sourceLine" id="cb3-36" data-line-number="36">        key <span class="op">=</span> file_item.replace(<span class="st">&quot;/git/download/&quot;</span>,<span class="st">&quot;&quot;</span>)</a>
+<a class="sourceLine" id="cb3-37" data-line-number="37">        <span class="co">#生成上传 Token，可以指定过期时间等</span></a>
+<a class="sourceLine" id="cb3-38" data-line-number="38">        token <span class="op">=</span> q.upload_token(bucket_name, key, <span class="dv">3600</span>)</a>
+<a class="sourceLine" id="cb3-39" data-line-number="39">        ret, info <span class="op">=</span> put_file(token, key, localfile)</a>
+<a class="sourceLine" id="cb3-40" data-line-number="40">        <span class="bu">print</span>(ret)</a>
+<a class="sourceLine" id="cb3-41" data-line-number="41">        <span class="co">#print(info)</span></a>
+<a class="sourceLine" id="cb3-42" data-line-number="42">        need_add.append(ret)</a>
+<a class="sourceLine" id="cb3-43" data-line-number="43">        <span class="co">#assert ret[&#39;key&#39;] == key</span></a>
+<a class="sourceLine" id="cb3-44" data-line-number="44">        <span class="co">#assert ret[&#39;hash&#39;] == etag(localfile)</span></a>
+<a class="sourceLine" id="cb3-45" data-line-number="45"></a>
+<a class="sourceLine" id="cb3-46" data-line-number="46">hash_json<span class="op">+=</span>need_add</a>
+<a class="sourceLine" id="cb3-47" data-line-number="47"><span class="bu">print</span>(<span class="st">&quot;=&quot;</span><span class="op">*</span><span class="dv">20</span>)</a>
+<a class="sourceLine" id="cb3-48" data-line-number="48"><span class="bu">print</span>(json.dumps(need_add, indent<span class="op">=</span><span class="dv">4</span>))</a>
+<a class="sourceLine" id="cb3-49" data-line-number="49"><span class="bu">print</span>(<span class="st">&quot;=&quot;</span><span class="op">*</span><span class="dv">20</span>)</a>
+<a class="sourceLine" id="cb3-50" data-line-number="50"><span class="cf">with</span> <span class="bu">open</span>(hash_json_file,<span class="st">&#39;w&#39;</span>,encoding<span class="op">=</span><span class="st">&#39;utf-8&#39;</span>) <span class="im">as</span> f:</a>
+<a class="sourceLine" id="cb3-51" data-line-number="51">        json.dump(hash_json,f,indent<span class="op">=</span><span class="dv">4</span>)</a></code></pre></div>
+<p>代码也是比较简单，就是利用了一个hash文件来控制不去上传重复的文件。</p>
+<h3 id="测试上传">测试上传</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1">[<span class="ex">root@www</span> bin]# /usr/local/python3/bin/python /root/bin/push_download_to_qiniu.py </a></code></pre></div>
+<h3 id="配置计划任务">配置计划任务</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb5-1" data-line-number="1">[<span class="ex">root@www</span> bin]# crontab -e</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co"># 添加如下行</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="ex">1</span> 1 * * * /usr/local/python3/bin/python /root/bin/push_download_to_qiniu.py</a></code></pre></div>
+<h3 id="测试下载速度">测试下载速度</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="ex">C</span>:\Users\Administrator<span class="op">&gt;</span>curl http://download.linuxpanda.tech/lamp/mariadb-10.2.12.tar.gz?attname= -O</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">  <span class="ex">%</span> Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">                                <span class="ex">Dload</span>  Upload   Total   Spent    Left  Speed</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="ex">100</span> 69.4M  100 69.4M    0     0  3555k      0  0:00:20  0:00:20 --:--:-- 5151k</a></code></pre></div>
+<p>一个近60M的文件20秒就下载完毕了，平均1s就3M,下载速度杠杠滴，要是使用我自己的那个1M的带宽，那个下载速度最大也就125k。</p>
+<h3 id="配置自己的下载地址">配置自己的下载地址</h3>
+<p>上面使用了七牛云的下载地址，但是没有列表展示界面，很不爽啊， 我还是希望我可以 能看到我自己的列表信息，可以在apache上配置一个虚拟主机。</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode xml"><code class="sourceCode xml"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">&lt;VirtualHost</span> <span class="er">*:80</span><span class="kw">&gt;</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">  ServerName download2.linuxpanda.tech</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">  ServerAlias down2.linuxpanda.tech ftp2.linuxpanda.tech</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">  DocumentRoot /git/download</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">  <span class="kw">&lt;Directory</span> <span class="er">/git/download</span><span class="kw">&gt;</span></a>
+<a class="sourceLine" id="cb7-6" data-line-number="6">        Options  +FollowSymLinks</a>
+<a class="sourceLine" id="cb7-7" data-line-number="7">        AllowOverride All</a>
+<a class="sourceLine" id="cb7-8" data-line-number="8">        Require all granted</a>
+<a class="sourceLine" id="cb7-9" data-line-number="9">  <span class="kw">&lt;/Directory&gt;</span></a>
+<a class="sourceLine" id="cb7-10" data-line-number="10"><span class="kw">&lt;/VirtualHost&gt;</span></a></code></pre></div>
+<p>访问的自己的输入对应的地址： <a href="http://download2.linuxpanda.tech" target="_blank" rel="noopener">download2.linuxpanda.tech</a></p>
+]]></content>
+      
+        <categories>
+            
+            <category> linux </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> linux </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[CA服务器的搭建]]></title>
       <url>/2018/02/13/CA%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E6%90%AD%E5%BB%BA/</url>
       <content type="html"><![CDATA[<p><a href="http://www.cnblogs.com/zhaojiedi1992/p/zhaojiedi_linux_011_ca.html" target="_blank" rel="noopener">另一篇关于ca的文章</a></p>

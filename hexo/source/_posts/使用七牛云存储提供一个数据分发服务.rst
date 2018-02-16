@@ -1,0 +1,220 @@
+---
+title: 使用七牛云存储提供一个数据分发服务
+tags:
+  - linux
+categories: linux
+copyright: true
+top: 10
+date: 2018-02-16 21:55:24
+---
+
+
+背景描述
+----------------------------------------------------
+我个人在阿里云注册一个域名和购买了一个主机，平时整理写脚本和一些压缩包，放在自己的download目录，然后使用apache配合虚拟主机
+共享出来，但是遇到问题了， 我自己的阿里云主机的带宽是1M的，下载速度真的慢，想想可以使用七牛云存储来改进下我的下载速度问题，
+把我的改进过程给大家分享下。
+
+七牛云简介
+---------------------------------------------------------
+（七牛云）隶属于上海七牛信息技术有限公司，七牛云是国内领先的企业级云服务商，专注于以数据管理为中心的云计算业务研发和运营，围绕富媒体
+场景推出了对象存储、融合 CDN 加速、容器计算云、大数据平台、人工智能平台等产品，并提供一站式视频云解决方案。公司目前已位列国内云计算
+行业第一阵营，为 70 多万家企业提供服务。
+
+七牛云相关
+-----------------------------------------------------------
+
+账号注册
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+注册地址_
+
+.. _注册地址: https://portal.qiniu.com/signup/choice
+
+账号实名认证
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+注册完毕需要下实名认证，很快的，大概1-2天就实名认证完毕了。
+
+新建存储空间
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: /images/qiniu/新建存储.png
+
+绑定域名
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: /images/qiniu/绑定域名.png
+
+设置默认域名连接
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: /images/qiniu/设置默认域名.png
+
+查看cname
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: /images/qiniu/查看cname.png
+
+设置cname
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: /images/qiniu/添加cname.png
+
+这个需要在自己的域名解析里面添加下这个cname的记录项。
+
+key的获取
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: /images/qiniu/七牛云key.png
+
+python3的安装(可选)
+-----------------------------------------------------------
+
+python的安装_
+
+.. _python的安装: https://repo.continuum.io/archive/Anaconda3-5.1.0-Linux-x86_64.sh
+
+这是一个bash脚本，下载下载下来运行就可以，注意设置下安装路径，我设置的是/usr/loca/python3
+
+安装七牛云的python包
+-----------------------------------------------------------
+
+.. code-block:: bash
+
+  [root@www qiniu]# /usr/local/python3/bin/pip install qiniu
+
+安装完毕之后，我们就可以使用七牛云提供的pythonapi了。
+
+上传文件
+-----------------------------------------------------------
+
+编辑config文件
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+  [root@www qiniu]# vim /usr/local/python3/lib/python3.6/site-packages/qiniu/config.py
+  # 修改超时时间
+  'connection_timeout': 300000,        # 链接超时为时间为30s
+
+因为我们自己上传的文件，可能很大，就会导致因链接时间过短而导致的上传失败，需要调整下timeout就可以了。
+
+编写脚本
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+官方api_
+
+.. _官方api: https://developer.qiniu.com/kodo/sdk/1242/python#upload-flow
+
+结合官方的api，我自己修改了下，如下。
+
+.. code-block:: python 
+
+  # -*- coding: utf-8 -*-
+  # flake8: noqa
+  from qiniu import Auth, put_file, etag, urlsafe_base64_encode
+  import qiniu.config
+  import os
+  import glob
+  import json
+  import jmespath
+  hash_json_file = "/root/bin/hash_file.json"
+  hash_json = []
+  hash_value = []
+  need_add = []
+  if os.path.exists(hash_json_file):
+          with open(hash_json_file) as f:
+                  hash_json=json.load(f)
+                  hash_value=jmespath.search('[*].hash',hash_json)
+  #print(hash_json)
+  #需要填写你的 Access Key 和 Secret Key
+  access_key = '6VGRI141Y1IHzO0WyIu9NKuKCPAMZsECmV80-sK0'
+  secret_key = '1GQwv1f8qcIQn3o9Bq3_1xXP_JR_-GQPlZDfK7pu'
+  #构建鉴权对象
+  q = Auth(access_key, secret_key)
+  #要上传的空间
+  bucket_name = 'download'
+  tmpfiles=glob.glob("/git/download/**/*" ,recursive=True)
+  files=[x for x in tmpfiles if os.path.isfile(x)]
+  for file_item in files:
+          print("=================>start upload" + file_item)
+          #要上传文件的本地路径
+          localfile = file_item
+          tmp_hash = etag(localfile)
+          if len(hash_value) > 0 and  tmp_hash in hash_value:
+                  print("========>sikp" + localfile)
+                  continue
+          #上传到七牛后保存的文件名
+          key = file_item.replace("/git/download/","")
+          #生成上传 Token，可以指定过期时间等
+          token = q.upload_token(bucket_name, key, 3600)
+          ret, info = put_file(token, key, localfile)
+          print(ret)
+          #print(info)
+          need_add.append(ret)
+          #assert ret['key'] == key
+          #assert ret['hash'] == etag(localfile)
+
+  hash_json+=need_add
+  print("="*20)
+  print(json.dumps(need_add, indent=4))
+  print("="*20)
+  with open(hash_json_file,'w',encoding='utf-8') as f:
+          json.dump(hash_json,f,indent=4)
+
+
+代码也是比较简单，就是利用了一个hash文件来控制不去上传重复的文件。
+
+
+测试上传
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+  [root@www bin]# /usr/local/python3/bin/python /root/bin/push_download_to_qiniu.py 
+
+配置计划任务
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+  [root@www bin]# crontab -e
+  # 添加如下行
+  1 1 * * * /usr/local/python3/bin/python /root/bin/push_download_to_qiniu.py
+
+
+测试下载速度
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+  C:\Users\Administrator>curl http://download.linuxpanda.tech/lamp/mariadb-10.2.12.tar.gz?attname= -O
+    % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                  Dload  Upload   Total   Spent    Left  Speed
+  100 69.4M  100 69.4M    0     0  3555k      0  0:00:20  0:00:20 --:--:-- 5151k
+
+一个近60M的文件20秒就下载完毕了，平均1s就3M,下载速度杠杠滴，要是使用我自己的那个1M的带宽，那个下载速度最大也就125k。
+
+
+配置自己的下载地址
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+上面使用了七牛云的下载地址，但是没有列表展示界面，很不爽啊， 我还是希望我可以
+能看到我自己的列表信息，可以在apache上配置一个虚拟主机。
+
+.. code-block:: xml
+
+  <VirtualHost *:80>
+    ServerName download2.linuxpanda.tech
+    ServerAlias down2.linuxpanda.tech ftp2.linuxpanda.tech
+    DocumentRoot /git/download
+    <Directory /git/download>
+          Options  +FollowSymLinks
+          AllowOverride All
+          Require all granted
+    </Directory>
+  </VirtualHost>
+
+访问的自己的输入对应的地址： download2.linuxpanda.tech_
+
+.. _download2.linuxpanda.tech: http://download2.linuxpanda.tech
