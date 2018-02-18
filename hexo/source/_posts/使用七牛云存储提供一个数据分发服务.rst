@@ -4,7 +4,7 @@ tags:
   - linux
 categories: linux
 copyright: true
-top: 10
+top: 60
 date: 2018-02-16 21:55:24
 ---
 
@@ -110,7 +110,8 @@ python的安装_
 结合官方的api，我自己修改了下，如下。
 
 .. code-block:: python 
-
+   :linenos:
+   
   # -*- coding: utf-8 -*-
   # flake8: noqa
   from qiniu import Auth, put_file, etag, urlsafe_base64_encode

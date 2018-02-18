@@ -17,7 +17,8 @@ CA服务器的配置
 ---------------------------------------------------------
 
 .. code-block:: bash
-
+   :linenos:
+   
     [root@localhost CA]# cd /etc/pki/CA/
 
     [root@localhost CA]# sed -r  -i 's@#?countryName_default.*@countryName_default=cn@' /etc/pki/tls/openssl.cnf
