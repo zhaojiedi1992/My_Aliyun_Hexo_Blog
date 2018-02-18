@@ -162,26 +162,6 @@
 
     
   <url>
-    <loc>http://www.linuxpanda.tech/2018/02/02/test_linux/</loc>
-    <lastmod>2018-02-06T12:10:00.706Z</lastmod>
-    <data>
-        <display>
-        <title>test_linux</title>
-        <pubTime>2018-02-02T11:08:49.000Z</pubTime>
-        
-        <tag>linux</tag>
-         
-         
-           
-             
-              <breadCrumb title="linux" url="http://www.linuxpanda.tech/categories/linux/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.linuxpanda.tech/2018/02/02/test_essay/</loc>
     <lastmod>2018-02-06T12:10:00.706Z</lastmod>
     <data>
@@ -195,6 +175,26 @@
            
              
               <breadCrumb title="essay" url="http://www.linuxpanda.tech/categories/essay/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.linuxpanda.tech/2018/02/02/test_linux/</loc>
+    <lastmod>2018-02-06T12:10:00.706Z</lastmod>
+    <data>
+        <display>
+        <title>test_linux</title>
+        <pubTime>2018-02-02T11:08:49.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+         
+           
+             
+              <breadCrumb title="linux" url="http://www.linuxpanda.tech/categories/linux/"/>
           
         </display>
     </data>
@@ -222,6 +222,21 @@
 
     
   <url>
+    <loc>http://www.linuxpanda.tech/2018/02/02/test/</loc>
+    <lastmod>2018-02-06T12:10:00.705Z</lastmod>
+    <data>
+        <display>
+        <title>test</title>
+        <pubTime>2018-02-02T11:03:53.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.linuxpanda.tech/2018/02/02/test_database/</loc>
     <lastmod>2018-02-06T12:10:00.705Z</lastmod>
     <data>
@@ -236,21 +251,6 @@
              
               <breadCrumb title="database" url="http://www.linuxpanda.tech/categories/database/"/>
           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.linuxpanda.tech/2018/02/02/test/</loc>
-    <lastmod>2018-02-06T12:10:00.705Z</lastmod>
-    <data>
-        <display>
-        <title>test</title>
-        <pubTime>2018-02-02T11:03:53.000Z</pubTime>
-        
-         
-           
         </display>
     </data>
     </url>
