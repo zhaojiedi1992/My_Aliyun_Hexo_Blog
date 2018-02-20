@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.linuxpanda.tech/2018/02/20/gitlab%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2/</loc>
+    
+    <lastmod>2018-02-20T07:18:41.588Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.linuxpanda.tech/2018/02/20/gitbucket%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2/</loc>
+    
+    <lastmod>2018-02-20T07:18:05.874Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.linuxpanda.tech/2018/02/18/lamp%E5%AE%9E%E6%88%98%E4%B8%80/</loc>
     
     <lastmod>2018-02-18T08:10:14.256Z</lastmod>
@@ -156,14 +170,14 @@
   </url>
   
   <url>
-    <loc>http://www.linuxpanda.tech/2018/02/02/test/</loc>
+    <loc>http://www.linuxpanda.tech/2018/02/02/test_database/</loc>
     
     <lastmod>2018-02-06T12:10:00.705Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.linuxpanda.tech/2018/02/02/test_database/</loc>
+    <loc>http://www.linuxpanda.tech/2018/02/02/test/</loc>
     
     <lastmod>2018-02-06T12:10:00.705Z</lastmod>
     

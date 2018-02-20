@@ -3,6 +3,111 @@
   
     
     <entry>
+      <title><![CDATA[gitlab本地部署]]></title>
+      <url>/2018/02/20/gitlab%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2/</url>
+      <content type="html"><![CDATA[<h2 id="安装和配置必要的依赖">安装和配置必要的依赖</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1">[<span class="ex">root@centos-7</span> ~]# yum install postfix </a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">[<span class="ex">root@centos-7</span> ~]# systemctl start postfix</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">[<span class="ex">root@centos-7</span> ~]# systemctl enable postfix</a></code></pre></div>
+<p>如果postfix启动不起来，提示no local interface found for ::1。可以修改下 /etc/postfix/main.cf中inet_interfaces = all。</p>
+<h2 id="添加gitlab的仓库并安装包">添加gitlab的仓库并安装包</h2>
+<h3 id="执行脚本添加">执行脚本添加</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1">[<span class="ex">root@centos-7</span> ~]# curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.rpm.sh <span class="kw">|</span> <span class="fu">sudo</span> bash</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">[<span class="ex">root@centos-7</span> ~]# yum -y install gitlab-ce</a></code></pre></div>
+<div class="note">
+<div class="admonition-title">
+<p>Note</p>
+</div>
+<p>这个包大概440M大小，需要一定的等待时间。</p>
+</div>
+<h3 id="手工添加">手工添加</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1">[<span class="ex">root@centos-7</span> yum.repos.d]# vim gitlab-ce.repo</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">[<span class="ex">gitlab-ce</span>]</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="va">name=</span>Gitlab <span class="ex">CE</span> Repository</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="va">baseurl=</span>https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el7/</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="va">gpgcheck=</span>0</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="va">enabled=</span>1</a></code></pre></div>
+<p>这个使用清华的镜像，没有使用国外的，下载可能会快点。</p>
+<h3 id="修改配置文件的url">修改配置文件的url</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1">[<span class="ex">root@centos-7</span> src]# vim /etc/gitlab/gitlab.rb </a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="ex">external_url</span> <span class="st">&#39;http://localhost&#39;</span></a></code></pre></div>
+<h2 id="启动下gitlab">启动下gitlab</h2>
+<p>启动gitlab</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb5-1" data-line-number="1">[<span class="ex">root@centos-7</span> src]# systemctl enable gitlab-runsvdir.service</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">[<span class="ex">root@centos-7</span> src]# gitlab-ctl  reconfigure</a></code></pre></div>
+<p>这个配置大概需要10多分钟，耐心等待，我是centos7的系统，安装一直有问题。</p>
+<p>错误修复</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb6-1" data-line-number="1">[<span class="ex">root@www</span> ~]# yum install gem </a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">[<span class="ex">root@www</span> ~]# gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">[<span class="ex">root@centos-7</span> src]# gitlab-ctl  reconfigure</a></code></pre></div>
+<h2 id="测试">测试</h2>
+<p><img src="/images/git/gitlab登陆.png" alt="image"></p>
+<p>登陆账号root,密码：5iveL!fe</p>
+<p><img src="/images/git/gitlab修改密码.png" alt="image"></p>
+<p><img src="/images/git/gitlab登陆2.png" alt="image"></p>
+<p><img src="/images/git/gitlab主页.png" alt="image"></p>
+<h2 id="禁止注册">禁止注册</h2>
+<p>公司内部是禁止注册的，需要的话练习管理员给开账号。</p>
+<p><img src="/images/git/gitlab禁止注册.png" alt="image"></p>
+<h2 id="参考">参考</h2>
+<p><a href="https://about.gitlab.com/installation/" target="_blank" rel="noopener">官方参考</a></p>
+]]></content>
+      
+        <categories>
+            
+            <category> linux </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> linux </tag>
+            
+            <tag> git </tag>
+            
+            <tag> gitlab </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[gitbucket本地部署]]></title>
+      <url>/2018/02/20/gitbucket%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2/</url>
+      <content type="html"><![CDATA[<h2 id="下载软件包">下载软件包</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1">[<span class="ex">root@centos-7</span> src]# wget https://github.com/gitbucket/gitbucket/archive/4.21.2.tar.gz</a></code></pre></div>
+<h2 id="运行服务">运行服务</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1">[<span class="ex">root@centos-150</span> src]# java -jar gitbucket.war</a></code></pre></div>
+<h2 id="测试">测试</h2>
+<p><img src="/images/git/gitbucket主页.png" alt="image"></p>
+<p><img src="/images/git/gitbucket登录.png" alt="image"></p>
+<p><img src="/images/git/gitbucket创建仓库.png" alt="image"></p>
+<p><img src="/images/git/gitbucket效果图.png" alt="image"></p>
+<h2 id="参考">参考</h2>
+<p><a href="https://github.com/gitbucket/gitbucket#installation" target="_blank" rel="noopener">官方安装指南</a></p>
+]]></content>
+      
+        <categories>
+            
+            <category> linux </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> linux </tag>
+            
+            <tag> git </tag>
+            
+            <tag> gitbucket </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[lamp一键编译安装]]></title>
       <url>/2018/02/18/lamp%E4%B8%80%E9%94%AE%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/</url>
       <content type="html"><![CDATA[<h2 id="安装">安装</h2>

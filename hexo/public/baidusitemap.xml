@@ -4,6 +4,54 @@
 
     
   <url>
+    <loc>http://www.linuxpanda.tech/2018/02/20/gitlab%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2/</loc>
+    <lastmod>2018-02-20T07:18:41.588Z</lastmod>
+    <data>
+        <display>
+        <title>gitlab本地部署</title>
+        <pubTime>2018-02-20T07:17:01.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>git</tag>
+         
+        <tag>gitlab</tag>
+         
+         
+           
+             
+              <breadCrumb title="linux" url="http://www.linuxpanda.tech/categories/linux/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.linuxpanda.tech/2018/02/20/gitbucket%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2/</loc>
+    <lastmod>2018-02-20T07:18:05.874Z</lastmod>
+    <data>
+        <display>
+        <title>gitbucket本地部署</title>
+        <pubTime>2018-02-20T07:16:03.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>git</tag>
+         
+        <tag>gitbucket</tag>
+         
+         
+           
+             
+              <breadCrumb title="linux" url="http://www.linuxpanda.tech/categories/linux/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.linuxpanda.tech/2018/02/18/lamp%E5%AE%9E%E6%88%98%E4%B8%80/</loc>
     <lastmod>2018-02-18T08:10:14.256Z</lastmod>
     <data>
@@ -222,21 +270,6 @@
 
     
   <url>
-    <loc>http://www.linuxpanda.tech/2018/02/02/test/</loc>
-    <lastmod>2018-02-06T12:10:00.705Z</lastmod>
-    <data>
-        <display>
-        <title>test</title>
-        <pubTime>2018-02-02T11:03:53.000Z</pubTime>
-        
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.linuxpanda.tech/2018/02/02/test_database/</loc>
     <lastmod>2018-02-06T12:10:00.705Z</lastmod>
     <data>
@@ -251,6 +284,21 @@
              
               <breadCrumb title="database" url="http://www.linuxpanda.tech/categories/database/"/>
           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.linuxpanda.tech/2018/02/02/test/</loc>
+    <lastmod>2018-02-06T12:10:00.705Z</lastmod>
+    <data>
+        <display>
+        <title>test</title>
+        <pubTime>2018-02-02T11:03:53.000Z</pubTime>
+        
+         
+           
         </display>
     </data>
     </url>
