@@ -554,7 +554,7 @@ systemd
     ExecStart=/usr/sbin/mysqld --defaults-file=/etc/my.cnf.d/my%I.cnf \
     $_WSREP_NEW_CLUSTER $_WSREP_START_POSITION%I $MYSQLD_OPTS
 
-上面的简单的说就是说明下mysqld命令的路径，指定你的实例所在的路径%I代表实例名字。后续启动的systemctl start mariadb@5307这个命令中，5307就是实例名字。
+上面的简单的说就是说明下mysqld命令的路径，指定你的实例所在的路径%I代表实例名字。后续启动的 "systemctl start mariadb\@5307" 这个命令中，5307就是实例名字。
 
 这个文件有点多， 提供一个下载参考吧。
 

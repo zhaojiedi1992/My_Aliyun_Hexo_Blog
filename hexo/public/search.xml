@@ -1403,7 +1403,7 @@
 <a class="sourceLine" id="cb24-8" data-line-number="8"></a>
 <a class="sourceLine" id="cb24-9" data-line-number="9"><span class="va">ExecStart=</span>/usr/sbin/mysqld <span class="ex">--defaults-file</span>=/etc/my.cnf.d/my%I.cnf \</a>
 <a class="sourceLine" id="cb24-10" data-line-number="10"><span class="va">$_WSREP_NEW_CLUSTER</span> <span class="va">$_WSREP_START_POSITION</span>%I <span class="va">$MYSQLD_OPTS</span></a></code></pre></div>
-<p>上面的简单的说就是说明下mysqld命令的路径，指定你的实例所在的路径%I代表实例名字。后续启动的systemctl start <a href="mailto:mariadb@5307这个命令中" target="_blank" rel="noopener">mariadb@5307这个命令中</a>，5307就是实例名字。</p>
+<p>上面的简单的说就是说明下mysqld命令的路径，指定你的实例所在的路径%I代表实例名字。后续启动的 &quot;systemctl start mariadb@5307&quot; 这个命令中，5307就是实例名字。</p>
 <p>这个文件有点多， 提供一个下载参考吧。</p>
 <p><span data-role="download">/files/mariadb@.service</span></p>
 <h3 id="启动服务和查看状态-1">启动服务和查看状态</h3>
