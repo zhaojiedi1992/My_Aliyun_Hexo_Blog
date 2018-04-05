@@ -1,5 +1,503 @@
-<!DOCTYPE html><html class="theme-next gemini use-motion" lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="theme-color" content="#222"><script src="/lib/pace/pace.min.js?v=1.0.2"></script><link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css"><link href="/css/main.css?v=6.0.3" rel="stylesheet" type="text/css"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.3"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.3"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.3"><link rel="mask-icon" href="/images/logo.svg?v=6.0.3" color="#222"><script type="text/javascript" id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Gemini",version:"6.0.3",sidebar:{position:"left",display:"post",offset:12,b2t:!1,scrollpercent:!0,onmobile:!1},fancybox:!1,fastclick:!1,lazyload:!1,tabs:!0,motion:{enable:!0,async:!1,transition:{post_block:"fadeIn",post_header:"slideDownIn",post_body:"slideDownIn",coll_header:"slideLeftIn",sidebar:"slideUpIn"}},algolia:{applicationID:"AHGJT89GR9",apiKey:"fabf7792bd5bfea54e718df3268199d7",indexName:"blog",hits:{per_page:10},labels:{input_placeholder:"输入查找内容",hits_empty:"不能查到任何结果: ${query}",hits_stats:"${hits} 查找结果在 ${time} ms"}}}</script><meta name="keywords" content="linux,"><meta name="description" content="这个实战是我在 马哥教育 培训中期，给的实战题目，相对比较简单。 架构图   dns完成解析web1,web2来实现负载均衡 web1,web2使用后台的mysql数据库 web1,web2的页面数据全部放在nfs数据上，实现自动挂载 nfs服务器为web1,web2提供网页数据  准备工作 设置ip信息 nmcli con add ifname ens33 con-name"><meta name="keywords" content="linux"><meta property="og:type" content="article"><meta property="og:title" content="lamp实战一"><meta property="og:url" content="http://www.linuxpanda.tech/2018/02/18/lamp实战一/index.html"><meta property="og:site_name" content="LinuxPanda"><meta property="og:description" content="这个实战是我在 马哥教育 培训中期，给的实战题目，相对比较简单。 架构图   dns完成解析web1,web2来实现负载均衡 web1,web2使用后台的mysql数据库 web1,web2的页面数据全部放在nfs数据上，实现自动挂载 nfs服务器为web1,web2提供网页数据  准备工作 设置ip信息 nmcli con add ifname ens33 con-name"><meta property="og:locale" content="zh-CN"><meta property="og:image" content="http://www.linuxpanda.tech/images/web/实战1架构图.png"><meta property="og:updated_time" content="2018-02-18T08:10:14.256Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="lamp实战一"><meta name="twitter:description" content="这个实战是我在 马哥教育 培训中期，给的实战题目，相对比较简单。 架构图   dns完成解析web1,web2来实现负载均衡 web1,web2使用后台的mysql数据库 web1,web2的页面数据全部放在nfs数据上，实现自动挂载 nfs服务器为web1,web2提供网页数据  准备工作 设置ip信息 nmcli con add ifname ens33 con-name"><meta name="twitter:image" content="http://www.linuxpanda.tech/images/web/实战1架构图.png"><link rel="canonical" href="http://www.linuxpanda.tech/2018/02/18/lamp实战一/"><script type="text/javascript" id="page.configurations">CONFIG.page={sidebar:""}</script><title>lamp实战一 | LinuxPanda</title><script type="text/javascript">var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="https://hm.baidu.com/hm.js?c268cd3f28f92d2977cf49d2b89d6ad9";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script><noscript><style type="text/css">.sidebar-inner,.use-motion .brand,.use-motion .collection-title,.use-motion .comments,.use-motion .menu-item,.use-motion .motion-element,.use-motion .pagination,.use-motion .post-block,.use-motion .post-body,.use-motion .post-header{opacity:initial}.use-motion .logo,.use-motion .site-subtitle,.use-motion .site-title{opacity:initial;top:initial}.logo-line-after i{right:initial}</style></noscript></head><body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN"><div class="container sidebar-position-left page-post-detail"><div class="headband"></div><header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-wrapper"><div class="site-meta custom-logo"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">LinuxPanda</span><span class="logo-line-after"><i></i></span></a></div><h1 class="site-subtitle" itemprop="description">zhaojiedi1992</h1></div><div class="site-nav-toggle"> <button><span class="btn-bar"></span><span class="btn-bar"></span><span class="btn-bar"></span></button></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br>标签<span class="badge">12</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br>分类<span class="badge">6</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br>归档<span class="badge">14</span></a></li><li class="menu-item menu-item-topic"><a href="/topic" rel="section"><i class="menu-item-icon fa fa-fw fa-opera"></i><br>专题</a></li><li class="menu-item menu-item-linux"><a href="/categories/linux/" rel="section"><i class="menu-item-icon fa fa-fw fa-linux"></i><br>Linux</a></li><li class="menu-item menu-item-python"><a href="/categories/python/" rel="section"><i class="menu-item-icon fa fa-fw fa-file-code-o"></i><br>Python</a></li><li class="menu-item menu-item-database"><a href="/categories/database/" rel="section"><i class="menu-item-icon fa fa-fw fa-database"></i><br>数据库</a></li><li class="menu-item menu-item-essay"><a href="/categories/essay/" rel="section"><i class="menu-item-icon fa fa-fw fa-pencil-square-o"></i><br>随笔</a></li><li class="menu-item menu-item-donate"><a href="/donate" rel="section"><i class="menu-item-icon fa fa-fw fa-credit-card"></i><br>赞助</a></li><li class="menu-item menu-item-spider"><a href="/categories/spider/" rel="section"><i class="menu-item-icon fa fa-fw fa-bug"></i><br>爬虫</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user-o"></i><br>关于</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><i class="menu-item-icon fa fa-search fa-fw"></i><br>搜索</a></li></ul><div class="site-search"><div class="algolia-popup popup search-popup"><div class="algolia-search"><div class="algolia-search-input-icon"><i class="fa fa-search"></i></div><div class="algolia-search-input" id="algolia-search-input"></div></div><div class="algolia-results"><div id="algolia-stats"></div><div id="algolia-hits"></div><div id="algolia-pagination" class="algolia-pagination"></div></div><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span></div></div></nav></div></header><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><div id="posts" class="posts-expand"><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="http://www.linuxpanda.tech/2018/02/18/lamp实战一/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="zhaojiedi1992"><meta itemprop="description" content=""><meta itemprop="image" content="/images/avatar.jpg"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="LinuxPanda"></span><header class="post-header"><h2 class="post-title" itemprop="name headline">lamp实战一</h2><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-18T15:49:42+08:00">2018-02-18</time></span> <span class="post-category"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span> <span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a></span></span> <span class="post-meta-divider">|</span> <span class="page-pv">本文访问量<i class="fa fa-file-o"></i><span class="busuanzi-value" id="busuanzi_value_page_pv"></span> 次</span></div></header><div class="post-body" itemprop="articleBody"><p>这个实战是我在 <a href="http://www.magedu.com/" target="_blank" rel="noopener">马哥教育</a> 培训中期，给的实战题目，相对比较简单。</p><h2 id="架构图">架构图</h2><p><img src="/images/web/实战1架构图.png" alt="image"></p><ul><li>dns完成解析web1,web2来实现负载均衡</li><li>web1,web2使用后台的mysql数据库</li><li>web1,web2的页面数据全部放在nfs数据上，实现自动挂载</li><li>nfs服务器为web1,web2提供网页数据</li></ul><h2 id="准备工作">准备工作</h2><p>设置ip信息</p><div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="ex">nmcli</span> con add ifname ens33 con-name ens33 type ethernet ipv4.method manual \</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">ipv4.address 192.158.46.150/24 ipv4.gateway 192.168.46.1</a></code></pre></div><div class="note"><div class="admonition-title"><p>Note</p></div><p>我使用的nmcli修改的ip，当然也是可以手工修改的。</p></div><h2 id="ansible的配置">ansible的配置</h2><h3 id="安装ansible">安装ansible</h3><div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1">[<span class="ex">root@localhost</span> ~]# yum install ansible</a></code></pre></div><h3 id="添加主机">添加主机</h3><p>需要添加如下内容到/etc/ansible/hosts文件中去。</p><div class="sourceCode" id="cb3"><pre class="sourceCode ini"><code class="sourceCode ini"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">[client]</span></a>
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.3" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.0.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: 'AHGJT89GR9',
+      apiKey: 'fabf7792bd5bfea54e718df3268199d7',
+      indexName: 'blog',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"输入查找内容","hits_empty":"不能查到任何结果: ${query}","hits_stats":"${hits} 查找结果在 ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="linux," />
+
+
+<meta name="description" content="这个实战是我在 马哥教育 培训中期，给的实战题目，相对比较简单。 架构图   dns完成解析web1,web2来实现负载均衡 web1,web2使用后台的mysql数据库 web1,web2的页面数据全部放在nfs数据上，实现自动挂载 nfs服务器为web1,web2提供网页数据  准备工作 设置ip信息 nmcli con add ifname ens33 con-name">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="lamp实战一">
+<meta property="og:url" content="http://www.linuxpanda.tech/2018/02/18/lamp实战一/index.html">
+<meta property="og:site_name" content="LinuxPanda">
+<meta property="og:description" content="这个实战是我在 马哥教育 培训中期，给的实战题目，相对比较简单。 架构图   dns完成解析web1,web2来实现负载均衡 web1,web2使用后台的mysql数据库 web1,web2的页面数据全部放在nfs数据上，实现自动挂载 nfs服务器为web1,web2提供网页数据  准备工作 设置ip信息 nmcli con add ifname ens33 con-name">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://www.linuxpanda.tech/images/web/实战1架构图.png">
+<meta property="og:updated_time" content="2018-02-18T08:10:14.256Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="lamp实战一">
+<meta name="twitter:description" content="这个实战是我在 马哥教育 培训中期，给的实战题目，相对比较简单。 架构图   dns完成解析web1,web2来实现负载均衡 web1,web2使用后台的mysql数据库 web1,web2的页面数据全部放在nfs数据上，实现自动挂载 nfs服务器为web1,web2提供网页数据  准备工作 设置ip信息 nmcli con add ifname ens33 con-name">
+<meta name="twitter:image" content="http://www.linuxpanda.tech/images/web/实战1架构图.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://www.linuxpanda.tech/2018/02/18/lamp实战一/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>lamp实战一 | LinuxPanda</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c268cd3f28f92d2977cf49d2b89d6ad9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta custom-logo">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LinuxPanda</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">zhaojiedi1992</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">12</span>
+
+
+              </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类<span class="badge">6</span>
+              </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">14</span>
+              </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-topic">
+          <a href="/topic" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-opera"></i> <br />专题</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-linux">
+          <a href="/categories/linux/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-linux"></i> <br />Linux</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-python">
+          <a href="/categories/python/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-file-code-o"></i> <br />Python</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-database">
+          <a href="/categories/database/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-database"></i> <br />数据库</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-essay">
+          <a href="/categories/essay/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-pencil-square-o"></i> <br />随笔</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-donate">
+          <a href="/donate" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-credit-card"></i> <br />赞助</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-spider">
+          <a href="/categories/spider/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-bug"></i> <br />爬虫</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user-o"></i> <br />关于</a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.linuxpanda.tech/2018/02/18/lamp实战一/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zhaojiedi1992">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LinuxPanda">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">lamp实战一</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-18T15:49:42+08:00">2018-02-18</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文访问量 <i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这个实战是我在 <a href="http://www.magedu.com/" target="_blank" rel="noopener">马哥教育</a> 培训中期，给的实战题目，相对比较简单。</p>
+<h2 id="架构图">架构图</h2>
+<p><img src="/images/web/实战1架构图.png" alt="image"></p>
+<ul>
+<li>dns完成解析web1,web2来实现负载均衡</li>
+<li>web1,web2使用后台的mysql数据库</li>
+<li>web1,web2的页面数据全部放在nfs数据上，实现自动挂载</li>
+<li>nfs服务器为web1,web2提供网页数据</li>
+</ul>
+<h2 id="准备工作">准备工作</h2>
+<p>设置ip信息</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="ex">nmcli</span> con add ifname ens33 con-name ens33 type ethernet ipv4.method manual \</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">ipv4.address 192.158.46.150/24 ipv4.gateway 192.168.46.1</a></code></pre></div>
+<div class="note">
+<div class="admonition-title">
+<p>Note</p>
+</div>
+<p>我使用的nmcli修改的ip，当然也是可以手工修改的。</p>
+</div>
+<h2 id="ansible的配置">ansible的配置</h2>
+<h3 id="安装ansible">安装ansible</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1">[<span class="ex">root@localhost</span> ~]# yum install ansible</a></code></pre></div>
+<h3 id="添加主机">添加主机</h3>
+<p>需要添加如下内容到/etc/ansible/hosts文件中去。</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode ini"><code class="sourceCode ini"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">[client]</span></a>
 <a class="sourceLine" id="cb3-2" data-line-number="2"><span class="dt">192.168.46.159</span></a>
 <a class="sourceLine" id="cb3-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb3-4" data-line-number="4"><span class="kw">[dns]</span></a>
@@ -13,7 +511,10 @@
 <a class="sourceLine" id="cb3-12" data-line-number="12"><span class="kw">[nfs]</span></a>
 <a class="sourceLine" id="cb3-13" data-line-number="13"><span class="dt">192.168.46.154</span></a>
 <a class="sourceLine" id="cb3-14" data-line-number="14"><span class="kw">[self]</span></a>
-<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="dt">192.168.46.150</span></a></code></pre></div><h3 id="配置免密码登陆">配置免密码登陆</h3><p>这里我之前写有一个脚本自动完成免密码登陆的脚本，参考我的博客_</p><div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1">[<span class="ex">root@localhost</span> ~]# cat hosts.txt </a>
+<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="dt">192.168.46.150</span></a></code></pre></div>
+<h3 id="配置免密码登陆">配置免密码登陆</h3>
+<p>这里我之前写有一个脚本自动完成免密码登陆的脚本，参考我的博客_</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1">[<span class="ex">root@localhost</span> ~]# cat hosts.txt </a>
 <a class="sourceLine" id="cb4-2" data-line-number="2"><span class="ex">192.168.46.150</span> root oracle</a>
 <a class="sourceLine" id="cb4-3" data-line-number="3"><span class="ex">192.168.46.151</span> root oracle</a>
 <a class="sourceLine" id="cb4-4" data-line-number="4"><span class="ex">192.168.46.152</span> root oracle</a>
@@ -62,7 +563,10 @@
 <a class="sourceLine" id="cb4-47" data-line-number="47">[root@localhost ~]# bash mima.sh </a>
 <a class="sourceLine" id="cb4-48" data-line-number="48"></a>
 <a class="sourceLine" id="cb4-49" data-line-number="49"># 测试下</a>
-<a class="sourceLine" id="cb4-50" data-line-number="50">[root@localhost ~]# ssh 192.168.46.151 &#39;ip a show ens33&#39;</a></code></pre></div><h3 id="设置主机名可选">设置主机名（可选）</h3><p>我这里的机器全是刚刚克隆出来的虚拟机，为了管理方便设置下主机名，防止误操作。</p><div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># 创建一个设置主机名的脚本</span></a>
+<a class="sourceLine" id="cb4-50" data-line-number="50">[root@localhost ~]# ssh 192.168.46.151 &#39;ip a show ens33&#39;</a></code></pre></div>
+<h3 id="设置主机名可选">设置主机名（可选）</h3>
+<p>我这里的机器全是刚刚克隆出来的虚拟机，为了管理方便设置下主机名，防止误操作。</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># 创建一个设置主机名的脚本</span></a>
 <a class="sourceLine" id="cb5-2" data-line-number="2">[<span class="ex">root@localhost</span> ~]# vim set_hostname.sh </a>
 <a class="sourceLine" id="cb5-3" data-line-number="3">[<span class="ex">root@localhost</span> ~]# cat set_hostname.sh </a>
 <a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#!/bin/bash</span></a>
@@ -73,12 +577,24 @@
 <a class="sourceLine" id="cb5-9" data-line-number="9"><span class="ex">hostnamectl</span> set-hostname <span class="va">$name</span></a>
 <a class="sourceLine" id="cb5-10" data-line-number="10"><span class="bu">echo</span> <span class="st">&quot;end&quot;</span></a>
 <a class="sourceLine" id="cb5-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb5-12" data-line-number="12">[<span class="ex">root@centos-localhost</span> ~]# ansible all -m script -a <span class="st">&#39;/root/set_hostname.sh&#39;</span></a></code></pre></div><p>这个脚本也是设置了ansible主机的ip。</p><h3 id="防火墙和selinux关闭">防火墙和selinux关闭</h3><div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># 关闭防火墙</span></a>
+<a class="sourceLine" id="cb5-12" data-line-number="12">[<span class="ex">root@centos-localhost</span> ~]# ansible all -m script -a <span class="st">&#39;/root/set_hostname.sh&#39;</span></a></code></pre></div>
+<p>这个脚本也是设置了ansible主机的ip。</p>
+<h3 id="防火墙和selinux关闭">防火墙和selinux关闭</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># 关闭防火墙</span></a>
 <a class="sourceLine" id="cb6-2" data-line-number="2">[<span class="ex">root@centos-150</span> ~]# ansible all -m service -a <span class="st">&#39;name=firewalld enabled=no&#39;</span></a>
 <a class="sourceLine" id="cb6-3" data-line-number="3">[<span class="ex">root@centos-150</span> ~]# ansible all -m service -a <span class="st">&#39;name=firewalld state=stopped&#39;</span></a>
 <a class="sourceLine" id="cb6-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb6-5" data-line-number="5">[<span class="ex">root@centos-150</span> ~]# ansible all -m shell -a <span class="st">&#39;sed  -i -r &#39;</span>s@SELINUX=.*@SELINUX=disabled@<span class="st">&#39; /etc/sysconfig/selinux&#39;</span></a>
-<a class="sourceLine" id="cb6-6" data-line-number="6">[<span class="ex">root@centos-150</span> ~]# ansible all -m shell -a  <span class="st">&#39;setenforce 0&#39;</span></a></code></pre></div><div class="note"><div class="admonition-title"><p>Note</p></div><p>如果原有selinux就是disabled，使用setenforce 0会报错误的，不用管它。</p></div><h2 id="dns主机设置">dns主机设置</h2><h3 id="dns配置">dns配置</h3><div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb7-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# yum install bind bind-utils</a>
+<a class="sourceLine" id="cb6-6" data-line-number="6">[<span class="ex">root@centos-150</span> ~]# ansible all -m shell -a  <span class="st">&#39;setenforce 0&#39;</span></a></code></pre></div>
+<div class="note">
+<div class="admonition-title">
+<p>Note</p>
+</div>
+<p>如果原有selinux就是disabled，使用setenforce 0会报错误的，不用管它。</p>
+</div>
+<h2 id="dns主机设置">dns主机设置</h2>
+<h3 id="dns配置">dns配置</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb7-1" data-line-number="1">[<span class="ex">root@centos-158</span> ~]# yum install bind bind-utils</a>
 <a class="sourceLine" id="cb7-2" data-line-number="2">[<span class="ex">root@centos-158</span> ~]# vim /etc/named.conf</a>
 <a class="sourceLine" id="cb7-3" data-line-number="3"><span class="co"># 注释如下5行</span></a>
 <a class="sourceLine" id="cb7-4" data-line-number="4"><span class="ex">//</span>      listen-on port 53 { 127.0.0.1<span class="kw">;</span> };</a>
@@ -107,7 +623,9 @@
 <a class="sourceLine" id="cb7-27" data-line-number="27"><span class="ex">ns1</span>     A       192.168.46.158</a>
 <a class="sourceLine" id="cb7-28" data-line-number="28"><span class="ex">web</span>     A       192.168.46.157</a>
 <a class="sourceLine" id="cb7-29" data-line-number="29"><span class="ex">web</span>     A       192.168.46.156</a>
-<a class="sourceLine" id="cb7-30" data-line-number="30"><span class="ex">www</span>     CNAME   web</a></code></pre></div><h3 id="dns本机测试">dns本机测试</h3><div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb8-1" data-line-number="1">[<span class="ex">root@centos-158</span> named]# dig www.linuxpanda.tech @localhost</a>
+<a class="sourceLine" id="cb7-30" data-line-number="30"><span class="ex">www</span>     CNAME   web</a></code></pre></div>
+<h3 id="dns本机测试">dns本机测试</h3>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb8-1" data-line-number="1">[<span class="ex">root@centos-158</span> named]# dig www.linuxpanda.tech @localhost</a>
 <a class="sourceLine" id="cb8-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb8-3" data-line-number="3">; <span class="op">&lt;&lt;&gt;&gt;</span> <span class="ex">DiG</span> 9.9.4-RedHat-9.9.4-51.el7_4.2 <span class="op">&lt;&lt;&gt;&gt;</span> www.linuxpanda.tech @localhost</a>
 <a class="sourceLine" id="cb8-4" data-line-number="4">;; <span class="ex">global</span> options: +cmd</a>
@@ -134,7 +652,9 @@
 <a class="sourceLine" id="cb8-25" data-line-number="25">;; Query time: 0 msec</a>
 <a class="sourceLine" id="cb8-26" data-line-number="26">;; SERVER: 127.0.0.1#53(127.0.0.1)</a>
 <a class="sourceLine" id="cb8-27" data-line-number="27">;; WHEN: Sun Feb 18 21:05:05 CST 2018</a>
-<a class="sourceLine" id="cb8-28" data-line-number="28">;; MSG SIZE  rcvd: 132</a></code></pre></div><h2 id="client主机测试">client主机测试</h2><div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co"># 修改客户端的dns指向为我们自己的dns主机</span></a>
+<a class="sourceLine" id="cb8-28" data-line-number="28">;; MSG SIZE  rcvd: 132</a></code></pre></div>
+<h2 id="client主机测试">client主机测试</h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co"># 修改客户端的dns指向为我们自己的dns主机</span></a>
 <a class="sourceLine" id="cb9-2" data-line-number="2">[<span class="ex">root@centos-159</span> ~]# nmcli con modify  ens33 ipv4.dns 192.168.46.158</a>
 <a class="sourceLine" id="cb9-3" data-line-number="3"><span class="co"># 重启网络，或者重新加载</span></a>
 <a class="sourceLine" id="cb9-4" data-line-number="4">[<span class="ex">root@centos-159</span> ~]# service network restart</a>
@@ -148,10 +668,23 @@
 <a class="sourceLine" id="cb9-12" data-line-number="12"></a>
 <a class="sourceLine" id="cb9-13" data-line-number="13">[<span class="ex">root@centos-159</span> ~]# ping www.linuxpanda.tech</a>
 <a class="sourceLine" id="cb9-14" data-line-number="14"><span class="ex">PING</span> web.linuxpanda.tech (192.168.46.156) <span class="ex">56</span>(84) <span class="ex">bytes</span> of data.</a>
-<a class="sourceLine" id="cb9-15" data-line-number="15"><span class="ex">64</span> bytes from 192.168.46.156 (192.168.46.156)<span class="bu">:</span> icmp_seq=1 ttl=64 time=0.421 ms</a></code></pre></div><div class="note"><div class="admonition-title"><p>Note</p></div><p>ping命令去测试有点不专业的，需要多次测试才能2个地址都出现，这里就不安装dig工具了，毕竟客户端。</p></div><h2 id="nfs主机配置">nfs主机配置</h2><h3 id="添加用户">添加用户</h3><div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb10-1" data-line-number="1">[<span class="ex">root@centos-154</span> ~]# groupadd -g 48 apache</a>
+<a class="sourceLine" id="cb9-15" data-line-number="15"><span class="ex">64</span> bytes from 192.168.46.156 (192.168.46.156)<span class="bu">:</span> icmp_seq=1 ttl=64 time=0.421 ms</a></code></pre></div>
+<div class="note">
+<div class="admonition-title">
+<p>Note</p>
+</div>
+<p>ping命令去测试有点不专业的，需要多次测试才能2个地址都出现，这里就不安装dig工具了，毕竟客户端。</p>
+</div>
+<h2 id="nfs主机配置">nfs主机配置</h2>
+<h3 id="添加用户">添加用户</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb10-1" data-line-number="1">[<span class="ex">root@centos-154</span> ~]# groupadd -g 48 apache</a>
 <a class="sourceLine" id="cb10-2" data-line-number="2">[<span class="ex">root@centos-154</span> ~]# useradd -u 48 -g 48 apache</a>
 <a class="sourceLine" id="cb10-3" data-line-number="3">[<span class="ex">root@centos-154</span> ~]# id apache</a>
-<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="va">uid=</span>48<span class="va">(</span>apache<span class="va">)</span> <span class="va">gid=</span>48<span class="va">(</span>apache<span class="va">)</span> <span class="va">groups=</span>48<span class="va">(</span>apache<span class="va">)</span></a></code></pre></div><h3 id="修改权限">修改权限</h3><div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb11-1" data-line-number="1">[<span class="ex">root@centos-154</span> ~]# chown -R apache.apache /data/html</a></code></pre></div><h3 id="共享出去">共享出去</h3><div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb12-1" data-line-number="1">[<span class="ex">root@centos-154</span> ~]# yum install nfs-utils</a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="va">uid=</span>48<span class="va">(</span>apache<span class="va">)</span> <span class="va">gid=</span>48<span class="va">(</span>apache<span class="va">)</span> <span class="va">groups=</span>48<span class="va">(</span>apache<span class="va">)</span></a></code></pre></div>
+<h3 id="修改权限">修改权限</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb11-1" data-line-number="1">[<span class="ex">root@centos-154</span> ~]# chown -R apache.apache /data/html</a></code></pre></div>
+<h3 id="共享出去">共享出去</h3>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb12-1" data-line-number="1">[<span class="ex">root@centos-154</span> ~]# yum install nfs-utils</a>
 <a class="sourceLine" id="cb12-2" data-line-number="2">[<span class="ex">root@centos-154</span> ~]# vim /etc/exports</a>
 <a class="sourceLine" id="cb12-3" data-line-number="3">[<span class="ex">root@centos-154</span> ~]# cat /etc/exports</a>
 <a class="sourceLine" id="cb12-4" data-line-number="4"><span class="ex">/data/html</span> 192.168.46.156(rw,all_squash,anonuid=apache,anongid=apache)</a>
@@ -159,9 +692,16 @@
 <a class="sourceLine" id="cb12-6" data-line-number="6">[<span class="ex">root@centos-154</span> ~]# systemctl restart nfsd</a>
 <a class="sourceLine" id="cb12-7" data-line-number="7">[<span class="ex">root@centos-154</span> ~]# exportfs -v </a>
 <a class="sourceLine" id="cb12-8" data-line-number="8"><span class="ex">/data/html</span>      192.168.46.156(rw,sync,wdelay,hide,no_subtree_check,anonuid=48,anongid=48,sec=sys,secure,root_squash,all_squash)</a>
-<a class="sourceLine" id="cb12-9" data-line-number="9"><span class="ex">/data/html</span>      192.168.46.157(rw,sync,wdelay,hide,no_subtree_check,anonuid=48,anongid=48,sec=sys,secure,root_squash,all_squash)</a></code></pre></div><h2 id="mysql主机配置">mysql主机配置</h2><h3 id="安装软件">安装软件</h3><div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb13-1" data-line-number="1">[<span class="ex">root@centos-155</span> ~]# yum install mariadb-server mariadb</a></code></pre></div><h3 id="启动服务">启动服务</h3><div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb14-1" data-line-number="1">[<span class="ex">root@centos-155</span> ~]# systemctl start mariadb</a>
+<a class="sourceLine" id="cb12-9" data-line-number="9"><span class="ex">/data/html</span>      192.168.46.157(rw,sync,wdelay,hide,no_subtree_check,anonuid=48,anongid=48,sec=sys,secure,root_squash,all_squash)</a></code></pre></div>
+<h2 id="mysql主机配置">mysql主机配置</h2>
+<h3 id="安装软件">安装软件</h3>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb13-1" data-line-number="1">[<span class="ex">root@centos-155</span> ~]# yum install mariadb-server mariadb</a></code></pre></div>
+<h3 id="启动服务">启动服务</h3>
+<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb14-1" data-line-number="1">[<span class="ex">root@centos-155</span> ~]# systemctl start mariadb</a>
 <a class="sourceLine" id="cb14-2" data-line-number="2">[<span class="ex">root@centos-155</span> ~]# netstat -tunlp <span class="kw">|</span><span class="fu">grep</span> 3306</a>
-<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="ex">tcp</span>        0      0 0.0.0.0:3306            0.0.0.0:*               LISTEN      13680/mysqld </a></code></pre></div><h3 id="添加应用用户">添加应用用户</h3><div class="sourceCode" id="cb15"><pre class="sourceCode sql"><code class="sourceCode sql"><a class="sourceLine" id="cb15-1" data-line-number="1">[root@centos<span class="dv">-155</span> ~]# mysql -u root -p </a>
+<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="ex">tcp</span>        0      0 0.0.0.0:3306            0.0.0.0:*               LISTEN      13680/mysqld </a></code></pre></div>
+<h3 id="添加应用用户">添加应用用户</h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode sql"><code class="sourceCode sql"><a class="sourceLine" id="cb15-1" data-line-number="1">[root@centos<span class="dv">-155</span> ~]# mysql -u root -p </a>
 <a class="sourceLine" id="cb15-2" data-line-number="2">Enter password: </a>
 <a class="sourceLine" id="cb15-3" data-line-number="3">Welcome <span class="kw">to</span> <span class="kw">the</span> MariaDB monitor.  Commands <span class="kw">end</span> <span class="kw">with</span> ; <span class="kw">or</span> \g.</a>
 <a class="sourceLine" id="cb15-4" data-line-number="4">Your MariaDB connection <span class="kw">id</span> <span class="kw">is</span> <span class="dv">10</span></a>
@@ -175,11 +715,19 @@
 <a class="sourceLine" id="cb15-12" data-line-number="12"><span class="kw">Query</span> OK, <span class="dv">1</span> <span class="kw">row</span> affected (<span class="fl">0.00</span> sec)</a>
 <a class="sourceLine" id="cb15-13" data-line-number="13"></a>
 <a class="sourceLine" id="cb15-14" data-line-number="14">MariaDB [(<span class="kw">none</span>)]&gt; <span class="kw">grant</span> <span class="kw">all</span> <span class="kw">on</span> web.* <span class="kw">to</span> web@<span class="st">&#39;192.168.46.%&#39;</span> <span class="kw">identified</span> <span class="kw">by</span> <span class="st">&#39;oracle&#39;</span>;</a>
-<a class="sourceLine" id="cb15-15" data-line-number="15"><span class="kw">Query</span> OK, <span class="dv">0</span> <span class="kw">rows</span> affected (<span class="fl">0.05</span> sec)</a></code></pre></div><h3 id="安全初始化">安全初始化</h3><div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb16-1" data-line-number="1">[<span class="ex">root@centos-155</span> ~]# mysql_secure_installation </a></code></pre></div><h2 id="web主机配置">web主机配置</h2><p>这里是2个主机。</p><h3 id="安装软件-1">安装软件</h3><div class="sourceCode" id="cb17"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="co"># 安装</span></a>
+<a class="sourceLine" id="cb15-15" data-line-number="15"><span class="kw">Query</span> OK, <span class="dv">0</span> <span class="kw">rows</span> affected (<span class="fl">0.05</span> sec)</a></code></pre></div>
+<h3 id="安全初始化">安全初始化</h3>
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb16-1" data-line-number="1">[<span class="ex">root@centos-155</span> ~]# mysql_secure_installation </a></code></pre></div>
+<h2 id="web主机配置">web主机配置</h2>
+<p>这里是2个主机。</p>
+<h3 id="安装软件-1">安装软件</h3>
+<div class="sourceCode" id="cb17"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="co"># 安装</span></a>
 <a class="sourceLine" id="cb17-2" data-line-number="2">[<span class="ex">root@centos-150</span> ~]# ansible web -m yum -a <span class="st">&#39;name=httpd,php-fpm,php-mysql,mod_fcgid state=installed&#39;</span></a>
 <a class="sourceLine" id="cb17-3" data-line-number="3"><span class="co"># 启动服务</span></a>
 <a class="sourceLine" id="cb17-4" data-line-number="4">[<span class="ex">root@centos-150</span> ~]# ansible web -m service -a <span class="st">&#39;name=httpd state=started&#39;</span></a>
-<a class="sourceLine" id="cb17-5" data-line-number="5">[<span class="ex">root@centos-150</span> ~]# ansible web -m service -a <span class="st">&#39;name=php-fpm state=started&#39;</span></a></code></pre></div><h3 id="挂载目录">挂载目录</h3><div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="co"># 安装必要的挂载相关的软件</span></a>
+<a class="sourceLine" id="cb17-5" data-line-number="5">[<span class="ex">root@centos-150</span> ~]# ansible web -m service -a <span class="st">&#39;name=php-fpm state=started&#39;</span></a></code></pre></div>
+<h3 id="挂载目录">挂载目录</h3>
+<div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="co"># 安装必要的挂载相关的软件</span></a>
 <a class="sourceLine" id="cb18-2" data-line-number="2">[<span class="ex">root@centos-156</span> httpd]# yum install nfs-utils cifs-utils</a>
 <a class="sourceLine" id="cb18-3" data-line-number="3"><span class="co"># 启动rpc服务</span></a>
 <a class="sourceLine" id="cb18-4" data-line-number="4">[<span class="ex">root@centos-156</span> httpd]# systemctl restart rpcbind</a>
@@ -196,7 +744,10 @@
 <a class="sourceLine" id="cb18-15" data-line-number="15">[<span class="ex">root@centos-156</span> httpd]# tail -n 1 /etc/mtab <span class="op">&gt;&gt;</span> /etc/fstab</a>
 <a class="sourceLine" id="cb18-16" data-line-number="16"><span class="co"># 查看下样例网页</span></a>
 <a class="sourceLine" id="cb18-17" data-line-number="17">[<span class="ex">root@centos-156</span> httpd]# cat /var/www/html/index.html </a>
-<a class="sourceLine" id="cb18-18" data-line-number="18"><span class="ex">hellow</span> world</a></code></pre></div><h3 id="配置httpd">配置httpd</h3><p>本部分内容需要在2个机器都要做一遍。</p><div class="sourceCode" id="cb19"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="co"># 下载一个样例的php页面  </span></a>
+<a class="sourceLine" id="cb18-18" data-line-number="18"><span class="ex">hellow</span> world</a></code></pre></div>
+<h3 id="配置httpd">配置httpd</h3>
+<p>本部分内容需要在2个机器都要做一遍。</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="co"># 下载一个样例的php页面  </span></a>
 <a class="sourceLine" id="cb19-2" data-line-number="2">[<span class="ex">root@centos-156</span> httpd]# wget download.linuxpanda.tech/lamp/index.php.sample -O /var/www/html/index.php</a>
 <a class="sourceLine" id="cb19-3" data-line-number="3"><span class="co"># 编辑下样例php页面的数据库连接用户和密码</span></a>
 <a class="sourceLine" id="cb19-4" data-line-number="4">[<span class="ex">root@centos-156</span> httpd]# vim /var/www/html/index.php</a>
@@ -219,15 +770,616 @@
 <a class="sourceLine" id="cb19-21" data-line-number="21"><span class="ex">ProxyRequests</span> Off</a>
 <a class="sourceLine" id="cb19-22" data-line-number="22"><span class="ex">ProxyPassMatch</span> ^/(.*\.php)$ <span class="ex">fcgi</span>://127.0.0.1:9000/var/www/html/<span class="va">$1</span></a>
 <a class="sourceLine" id="cb19-23" data-line-number="23"><span class="co"># 重启网络服务</span></a>
-<a class="sourceLine" id="cb19-24" data-line-number="24">[<span class="ex">root@centos-156</span> conf.d]# service httpd restart</a></code></pre></div><h3 id="本机测试">本机测试</h3><p>本部分内容需要在2个机器都要做一遍。</p><div class="sourceCode" id="cb20"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb20-1" data-line-number="1">[<span class="ex">root@centos-156</span> conf.d]# curl localhost/index.php</a>
-<a class="sourceLine" id="cb20-2" data-line-number="2">成功了</a></code></pre></div><h2 id="client测试">client测试</h2><div class="sourceCode" id="cb21"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb21-1" data-line-number="1">[<span class="ex">root@centos-159</span> ~]# curl http://www.linuxpanda.tech/index.php</a>
+<a class="sourceLine" id="cb19-24" data-line-number="24">[<span class="ex">root@centos-156</span> conf.d]# service httpd restart</a></code></pre></div>
+<h3 id="本机测试">本机测试</h3>
+<p>本部分内容需要在2个机器都要做一遍。</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb20-1" data-line-number="1">[<span class="ex">root@centos-156</span> conf.d]# curl localhost/index.php</a>
+<a class="sourceLine" id="cb20-2" data-line-number="2">成功了</a></code></pre></div>
+<h2 id="client测试">client测试</h2>
+<div class="sourceCode" id="cb21"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb21-1" data-line-number="1">[<span class="ex">root@centos-159</span> ~]# curl http://www.linuxpanda.tech/index.php</a>
 <a class="sourceLine" id="cb21-2" data-line-number="2">成功了</a>
 <a class="sourceLine" id="cb21-3" data-line-number="3"><span class="co"># 把156的web停掉</span></a>
 <a class="sourceLine" id="cb21-4" data-line-number="4">[<span class="ex">root@centos-159</span> ~]# curl http://www.linuxpanda.tech/index.php</a>
 <a class="sourceLine" id="cb21-5" data-line-number="5">成功了</a>
 <a class="sourceLine" id="cb21-6" data-line-number="6"><span class="co"># 再把157的web停掉</span></a>
 <a class="sourceLine" id="cb21-7" data-line-number="7">[<span class="ex">root@centos-159</span> ~]# curl http://www.linuxpanda.tech/index.php</a>
-<a class="sourceLine" id="cb21-8" data-line-number="8"><span class="ex">curl</span>: (7) <span class="ex">Failed</span> connect to www.linuxpanda.tech:80<span class="kw">;</span> <span class="ex">Connection</span> refused</a></code></pre></div><h2 id="总结">总结</h2><p>这个作业，看起来挺简单的，做起来还是遇到些麻烦的。</p><p>需要改进的地方：</p><ol><li>dns解析太不稳定，如果web1停掉，dns还可能解析到这个停掉的主机，就会导致web没法访问。</li><li>mysql实例后面学习了主从可以考虑完善下。</li><li>lamp没有使用xcache加速下</li><li>本练习都是使用的yum安装的lamp环境，可以考虑使用编译安装方法。</li><li>数据通过nfs共享，本质还是一个磁盘的数据，可以考虑使用rsync来替代nfs。</li><li>数据文件可以考虑放到raid上，来提供文件的访问性能</li></ol><h2 id="参考">参考</h2><p><a href="http://linux.linuxpanda.tech/" target="_blank" rel="noopener">我自己在马哥教育笔记1</a></p><p><a href="http://services.linuxpanda.tech/" target="_blank" rel="noopener">我自己在马哥教育笔记2</a></p></div><div><div style="padding:10px 0;margin:20px auto;width:90%;text-align:center"><div>❤ ❤ ❤ 您看的开心，不妨打赏下我，方便的话署名。 ❤ ❤ ❤</div> <button id="rewardButton" disable="enable" onclick='var qr=document.getElementById("QR");"none"===qr.style.display?qr.style.display="block":qr.style.display="none"'> <span>打赏</span></button><div id="QR" style="display:none"><div id="wechat" style="display:inline-block"> <img id="wechat_qr" src="/images/weixin.png" alt="zhaojiedi1992 微信支付"><p>微信支付</p></div><div id="alipay" style="display:inline-block"> <img id="alipay_qr" src="/images/zhifubao.png" alt="zhaojiedi1992 支付宝"><p>支付宝</p></div></div></div></div><footer class="post-footer"><div class="post-tags"><a href="/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a></div><div class="post-nav"><div class="post-nav-next post-nav-item"><a href="/2018/02/16/使用七牛云存储提供一个数据分发服务/" rel="next" title="使用七牛云存储提供一个数据分发服务"><i class="fa fa-chevron-left"></i> 使用七牛云存储提供一个数据分发服务</a></div><span class="post-nav-divider"></span><div class="post-nav-prev post-nav-item"> <a href="/2018/02/18/lamp一键编译安装/" rel="prev" title="lamp一键编译安装">lamp一键编译安装<i class="fa fa-chevron-right"></i></a></div></div></footer></div></article><div class="post-spread"></div></div></div><div class="comments" id="comments"><div id="lv-container" data-id="city" data-uid="MTAyMC8zMzg5MS8xMDQ0NA=="></div></div></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span><span class="sidebar-toggle-line sidebar-toggle-line-middle"></span><span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap"> 文章目录</li><li class="sidebar-nav-overview" data-target="site-overview-wrap"> 站点概览</li></ul><section class="site-overview-wrap sidebar-panel"><div class="site-overview"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"> <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="zhaojiedi1992"><p class="site-author-name" itemprop="name">zhaojiedi1992</p><p class="site-description motion-element" itemprop="description"></p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"> <a href="/archives/"><span class="site-state-item-count">14</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"> <a href="/categories/index.html"><span class="site-state-item-count">6</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags/index.html"><span class="site-state-item-count">12</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="links-of-author motion-element"><span class="links-of-author-item"><a href="https://github.com/zhaojiedi1992" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-github"></i> GitHub</a></span><span class="links-of-author-item"><a href="mailto:zhaojiedi1992@outlook.com" target="_blank" title="E-Mail" rel="external nofollow"><i class="fa fa-fw fa-envelope"></i> E-Mail</a></span><span class="links-of-author-item"><a href="http://wpa.qq.com/msgrd?v=3&uin=1072892917&site=qq&menu=yes" target="_blank" title="QQ" rel="external nofollow"><i class="fa fa-fw fa-qq"></i> QQ</a></span><span class="links-of-author-item"><a href="http://www.cnblogs.com/zhaojiedi1992" target="_blank" title="Cnblogs" rel="external nofollow"><i class="fa fa-fw fa-wordpress"></i> Cnblogs</a></span></div><div class="links-of-blogroll motion-element links-of-blogroll-block"><div class="links-of-blogroll-title"><i class="fa fa-fw fa-link"></i> 友情链接</div><ul class="links-of-blogroll-list"><li class="links-of-blogroll-item"> <a href="http://www.cnblogs.com/zhaojiedi1992" title="老博客" target="_blank">老博客</a></li><li class="links-of-blogroll-item"> <a href="http://www.magedu.com/" title="马哥教育" target="_blank">马哥教育</a></li></ul></div></div></section><section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active"><div class="post-toc"><div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#架构图"><span class="nav-number">1.</span> <span class="nav-text">架构图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#准备工作"><span class="nav-number">2.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ansible的配置"><span class="nav-number">3.</span> <span class="nav-text">ansible的配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装ansible"><span class="nav-number">3.1.</span> <span class="nav-text">安装ansible</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加主机"><span class="nav-number">3.2.</span> <span class="nav-text">添加主机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置免密码登陆"><span class="nav-number">3.3.</span> <span class="nav-text">配置免密码登陆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置主机名可选"><span class="nav-number">3.4.</span> <span class="nav-text">设置主机名（可选）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#防火墙和selinux关闭"><span class="nav-number">3.5.</span> <span class="nav-text">防火墙和selinux关闭</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dns主机设置"><span class="nav-number">4.</span> <span class="nav-text">dns主机设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dns配置"><span class="nav-number">4.1.</span> <span class="nav-text">dns配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dns本机测试"><span class="nav-number">4.2.</span> <span class="nav-text">dns本机测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#client主机测试"><span class="nav-number">5.</span> <span class="nav-text">client主机测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nfs主机配置"><span class="nav-number">6.</span> <span class="nav-text">nfs主机配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加用户"><span class="nav-number">6.1.</span> <span class="nav-text">添加用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改权限"><span class="nav-number">6.2.</span> <span class="nav-text">修改权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#共享出去"><span class="nav-number">6.3.</span> <span class="nav-text">共享出去</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql主机配置"><span class="nav-number">7.</span> <span class="nav-text">mysql主机配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装软件"><span class="nav-number">7.1.</span> <span class="nav-text">安装软件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动服务"><span class="nav-number">7.2.</span> <span class="nav-text">启动服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加应用用户"><span class="nav-number">7.3.</span> <span class="nav-text">添加应用用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安全初始化"><span class="nav-number">7.4.</span> <span class="nav-text">安全初始化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web主机配置"><span class="nav-number">8.</span> <span class="nav-text">web主机配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装软件-1"><span class="nav-number">8.1.</span> <span class="nav-text">安装软件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#挂载目录"><span class="nav-number">8.2.</span> <span class="nav-text">挂载目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置httpd"><span class="nav-number">8.3.</span> <span class="nav-text">配置httpd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本机测试"><span class="nav-number">8.4.</span> <span class="nav-text">本机测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#client测试"><span class="nav-number">9.</span> <span class="nav-text">client测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">10.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">11.</span> <span class="nav-text">参考</span></a></li></ol></div></div></section></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"><div class="copyright">&copy; <span itemprop="copyrightYear">2018</span><span class="with-love"><i class="fa fa-user"></i></span> <span class="author" itemprop="copyrightHolder">豫ICP备18001328号</span></div><div class="busuanzi-count"><script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script> <span class="site-uv">本站访客数量<i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span> 人次</span> <span class="site-pv">本站总访问量<i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span> 次</span></div></div></footer><div class="back-to-top"><i class="fa fa-arrow-up"></i> <span id="scrollpercent"><span>0</span>%</span></div></div><script type="text/javascript">"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script><script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script><script type="text/javascript" src="/js/src/utils.js?v=6.0.3"></script><script type="text/javascript" src="/js/src/motion.js?v=6.0.3"></script><script type="text/javascript" src="/js/src/affix.js?v=6.0.3"></script><script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.3"></script><script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.3"></script><script type="text/javascript" src="/js/src/post-details.js?v=6.0.3"></script><script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.3"></script><script type="text/javascript">!function(e,t){var n,c=e.getElementsByTagName(t)[0];"function"!=typeof LivereTower&&((n=e.createElement(t)).src="https://cdn-city.livere.com/js/embed.dist.js",n.async=!0,c.parentNode.insertBefore(n,c))}(document,"script")</script><link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css"><script src="/lib/algolia-instant-search/instantsearch.min.js"></script><script src="/js/src/algolia-search.js?v=6.0.3"></script><script>!function(){var t=document.createElement("script"),e=window.location.protocol.split(":")[0];t.src="https"===e?"https://zz.bdstatic.com/linksubmit/push.js":"http://push.zhanzhang.baidu.com/push.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}()</script><script type="text/javascript" src="/js/src/love.js"></script><div id="hexo-helper-live2d"><canvas id="live2dcanvas" width="300" height="300"></canvas></div><style>#live2dcanvas{position:fixed;width:300px;height:300px;opacity:.7;left:0;z-index:999;pointer-events:none;bottom:-20px}</style><script type="text/javascript" src="/live2d/device.min.js"></script><script type="text/javascript">
+<a class="sourceLine" id="cb21-8" data-line-number="8"><span class="ex">curl</span>: (7) <span class="ex">Failed</span> connect to www.linuxpanda.tech:80<span class="kw">;</span> <span class="ex">Connection</span> refused</a></code></pre></div>
+<h2 id="总结">总结</h2>
+<p>这个作业，看起来挺简单的，做起来还是遇到些麻烦的。</p>
+<p>需要改进的地方：</p>
+<ol>
+<li>dns解析太不稳定，如果web1停掉，dns还可能解析到这个停掉的主机，就会导致web没法访问。</li>
+<li>mysql实例后面学习了主从可以考虑完善下。</li>
+<li>lamp没有使用xcache加速下</li>
+<li>本练习都是使用的yum安装的lamp环境，可以考虑使用编译安装方法。</li>
+<li>数据通过nfs共享，本质还是一个磁盘的数据，可以考虑使用rsync来替代nfs。</li>
+<li>数据文件可以考虑放到raid上，来提供文件的访问性能</li>
+</ol>
+<h2 id="参考">参考</h2>
+<p><a href="http://linux.linuxpanda.tech/" target="_blank" rel="noopener">我自己在马哥教育笔记1</a></p>
+<p><a href="http://services.linuxpanda.tech/" target="_blank" rel="noopener">我自己在马哥教育笔记2</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>❤ ❤ ❤ 您看的开心，不妨打赏下我，方便的话署名。 ❤ ❤ ❤</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.png" alt="zhaojiedi1992 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/zhifubao.png" alt="zhaojiedi1992 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/16/使用七牛云存储提供一个数据分发服务/" rel="next" title="使用七牛云存储提供一个数据分发服务">
+                <i class="fa fa-chevron-left"></i> 使用七牛云存储提供一个数据分发服务
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/18/lamp一键编译安装/" rel="prev" title="lamp一键编译安装">
+                lamp一键编译安装 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMzg5MS8xMDQ0NA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="zhaojiedi1992" />
+            
+              <p class="site-author-name" itemprop="name">zhaojiedi1992</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">14</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/zhaojiedi1992" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:zhaojiedi1992@outlook.com" target="_blank" title="E-Mail" rel="external nofollow"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://wpa.qq.com/msgrd?v=3&uin=1072892917&site=qq&menu=yes" target="_blank" title="QQ" rel="external nofollow"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://www.cnblogs.com/zhaojiedi1992" target="_blank" title="Cnblogs" rel="external nofollow"><i class="fa fa-fw fa-wordpress"></i>Cnblogs</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.cnblogs.com/zhaojiedi1992" title="老博客" target="_blank">老博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.magedu.com/" title="马哥教育" target="_blank">马哥教育</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#架构图"><span class="nav-number">1.</span> <span class="nav-text">架构图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#准备工作"><span class="nav-number">2.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ansible的配置"><span class="nav-number">3.</span> <span class="nav-text">ansible的配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装ansible"><span class="nav-number">3.1.</span> <span class="nav-text">安装ansible</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加主机"><span class="nav-number">3.2.</span> <span class="nav-text">添加主机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置免密码登陆"><span class="nav-number">3.3.</span> <span class="nav-text">配置免密码登陆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置主机名可选"><span class="nav-number">3.4.</span> <span class="nav-text">设置主机名（可选）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#防火墙和selinux关闭"><span class="nav-number">3.5.</span> <span class="nav-text">防火墙和selinux关闭</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dns主机设置"><span class="nav-number">4.</span> <span class="nav-text">dns主机设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dns配置"><span class="nav-number">4.1.</span> <span class="nav-text">dns配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dns本机测试"><span class="nav-number">4.2.</span> <span class="nav-text">dns本机测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#client主机测试"><span class="nav-number">5.</span> <span class="nav-text">client主机测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nfs主机配置"><span class="nav-number">6.</span> <span class="nav-text">nfs主机配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加用户"><span class="nav-number">6.1.</span> <span class="nav-text">添加用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改权限"><span class="nav-number">6.2.</span> <span class="nav-text">修改权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#共享出去"><span class="nav-number">6.3.</span> <span class="nav-text">共享出去</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql主机配置"><span class="nav-number">7.</span> <span class="nav-text">mysql主机配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装软件"><span class="nav-number">7.1.</span> <span class="nav-text">安装软件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动服务"><span class="nav-number">7.2.</span> <span class="nav-text">启动服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加应用用户"><span class="nav-number">7.3.</span> <span class="nav-text">添加应用用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安全初始化"><span class="nav-number">7.4.</span> <span class="nav-text">安全初始化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web主机配置"><span class="nav-number">8.</span> <span class="nav-text">web主机配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装软件-1"><span class="nav-number">8.1.</span> <span class="nav-text">安装软件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#挂载目录"><span class="nav-number">8.2.</span> <span class="nav-text">挂载目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置httpd"><span class="nav-number">8.3.</span> <span class="nav-text">配置httpd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本机测试"><span class="nav-number">8.4.</span> <span class="nav-text">本机测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#client测试"><span class="nav-number">9.</span> <span class="nav-text">client测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">10.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">11.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">豫ICP备18001328号</span>
+
+  
+
+  
+</div>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数量 <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量 <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.0.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.3"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=6.0.3"></script>
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/love.js"></script>
+  
+<div id="hexo-helper-live2d">
+  <canvas id="live2dcanvas" width="300" height="300"></canvas>
+</div>
+<style>
+  #live2dcanvas{
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    opacity:0.7;
+    left: 0px;
+    z-index: 999;
+    pointer-events: none;
+    bottom: -20px;
+  }
+</style>
+<script type="text/javascript" src="/live2d/device.min.js"></script>
+<script type="text/javascript">
 const loadScript = function loadScript(c,b){var a=document.createElement("script");a.type="text/javascript";"undefined"!=typeof b&&(a.readyState?a.onreadystatechange=function(){if("loaded"==a.readyState||"complete"==a.readyState)a.onreadystatechange=null,b()}:a.onload=function(){b()});a.src=c;document.body.appendChild(a)};
 (function(){
   if((typeof(device) != 'undefined') && (device.mobile())){
@@ -237,4 +1389,7 @@ const loadScript = function loadScript(c,b){var a=document.createElement("script
     if (typeof(device) === 'undefined') console.error('Cannot find current-device script.');
   loadScript("/live2d/script.js", function(){loadlive2d("live2dcanvas", "/live2d/assets/wanko.model.json", 0.5);});
 })();
-</script></body></html>
+</script>
+
+</body>
+</html>

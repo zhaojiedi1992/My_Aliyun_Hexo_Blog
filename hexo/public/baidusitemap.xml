@@ -210,26 +210,6 @@
 
     
   <url>
-    <loc>http://www.linuxpanda.tech/2018/02/02/test_python/</loc>
-    <lastmod>2018-02-06T12:10:00.706Z</lastmod>
-    <data>
-        <display>
-        <title>test_python</title>
-        <pubTime>2018-02-02T11:08:30.000Z</pubTime>
-        
-        <tag>python</tag>
-         
-         
-           
-             
-              <breadCrumb title="python" url="http://www.linuxpanda.tech/categories/python/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.linuxpanda.tech/2018/02/02/test_essay/</loc>
     <lastmod>2018-02-06T12:10:00.706Z</lastmod>
     <data>
@@ -243,6 +223,26 @@
            
              
               <breadCrumb title="essay" url="http://www.linuxpanda.tech/categories/essay/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.linuxpanda.tech/2018/02/02/test_python/</loc>
+    <lastmod>2018-02-06T12:10:00.706Z</lastmod>
+    <data>
+        <display>
+        <title>test_python</title>
+        <pubTime>2018-02-02T11:08:30.000Z</pubTime>
+        
+        <tag>python</tag>
+         
+         
+           
+             
+              <breadCrumb title="python" url="http://www.linuxpanda.tech/categories/python/"/>
           
         </display>
     </data>
